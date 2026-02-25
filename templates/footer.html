@@ -1,0 +1,71 @@
+<footer class="footer mt-5">
+
+<div class="container">
+
+<div class="row gy-4">
+
+<!-- Logo -->
+<div class="col-md-4">
+
+<h4 class="footer-logo">StarMediaBlog</h4>
+
+<p class="footer-desc">
+Votre source fiable d'actualités sportives, musicales, sociopolitiques et divers.
+</p>
+
+</div>
+
+<!-- Navigation -->
+<div class="col-md-4">
+
+<h6 class="footer-title">Navigation</h6>
+
+<ul class="footer-links">
+
+<li><a href="{% url 'category_articles' 'sport' %}">Sport</a></li>
+
+<li><a href="{% url 'category_articles' 'musique' %}">Musique</a></li>
+
+<li><a href="{% url 'category_articles' 'sociopolitique' %}">Sociopolitique</a></li>
+
+<li><a href="{% url 'category_articles' 'divers' %}">Divers</a></li>
+</ul>
+
+
+</div>
+
+<!-- Réseaux sociaux -->
+<div class="col-md-4">
+
+<h6 class="footer-title">Suivez-nous</h6>
+
+<div class="social-icons">
+
+<a href="https://www.facebook.com/profile.php?id=61588267723506"><i class="bi bi-facebook"></i></a>
+
+<a href="https://x.com/StarMediaBlog1"><i class="bi bi-twitter-x"></i></a>
+
+<a href="#"><i class="bi bi-instagram"></i></a>
+
+<a href="#"><i class="bi bi-youtube"></i></a>
+
+<a href="#"><i class="bi bi-tiktok"></i></a>
+
+
+</div>
+
+</div>
+
+</div>
+
+<hr class="footer-line">
+
+<div class="text-center footer-copy">
+
+© {% now "Y" %} StarMediaBlog — Tous droits réservés
+
+</div>
+
+</div>
+
+</footer>

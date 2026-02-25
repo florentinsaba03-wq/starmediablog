@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>{{ category.name }} - StarMediaBlog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="/static/css/style.css">
+
+</head>
+
+<body>
+
+{% include "navbar.html" %}
+
+<div class="container mt-4">
+
+<h2 class="mb-4">{{ category.name }}</h2>
+
+<div class="row">
+
+{% for article in articles %}
+
+<div class="col-md-4 mb-4">
+
+<div class="card">
+
+{% if article.image %}
+<img src="{{ article.image.url }}" class="card-img-top">
+{% endif %}
+
+<div class="card-body">
+
+<h5>
+<a href="{% url 'article_detail' article.slug %}">
+{{ article.title }}
+</a>
+</h5>
+
+<p>{{ article.content|safe }}</p>
+
+</div>
+
+</div>
+
+</div>
+{% empty %}
+    <p>Aucun article dans cette catégorie.</p>
+{% endfor %}
+
+</div>
+
+<!-- Pagination -->
+
+<div class="d-flex justify-content-center mt-4">
+
+{% if articles.has_previous %}
+<a href="?page={{ articles.previous_page_number }}" class="btn btn-primary me-2">
+Précédent
+</a>
+{% endif %}
+
+<span class="btn btn-light">
+Page {{ articles.number }}
+</span>
+
+{% if articles.has_next %}
+<a href="?page={{ articles.next_page_number }}" class="btn btn-primary ms-2">
+Suivant
+</a>
+{% endif %}
+
+</div>
+
+</div>
+
+{% include "footer.html" %}
+
+</body>
+
+</html>
