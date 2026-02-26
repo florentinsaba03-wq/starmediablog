@@ -12,8 +12,83 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 from django.conf.global_settings import MEDIA_ROOT, ALLOWED_HOSTS
 import os
+from decouple import config
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+SECRET_KEY = config('SECRET_KEY')
+
+DEBUG = config('DEBUG', default=False, cast=bool)
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')
+    )
+}
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static'), ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+MEDIA_URL = '/media/'
+CKEDITOR_UPLOAD_PATH = "/uploads/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
+ALLOWED_HOSTS = ['*']
+DEBUG = config('DEBUG', default=True, cast=bool)
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': [
+            'heading',
+            '|',
+            'bold', 'italic', 'underline', 'strikethrough',
+            '|',
+            'link',
+            'bulletedList',
+            'numberedList',
+            '|',
+            'blockQuote',
+            'insertTable',
+            'imageUpload',
+            '|',
+            'undo',
+            'redo',
+            '|',
+            'alignment',
+            'fontSize',
+            'fontColor',
+            'fontBackgroundColor',
+            '|',
+            'codeBlock',
+            'htmlEmbed'
+        ],
+
+        'image': {
+            'toolbar': [
+                'imageTextAlternative',
+                'imageStyle:inline',
+                'imageStyle:block',
+                'imageStyle:side',
+            ]
+        },
+
+        'table': {
+            'contentToolbar': [
+                'tableColumn',
+                'tableRow',
+                'mergeTableCells'
+            ]
+        },
+
+        'heading': {
+            'options': [
+                {'model': 'paragraph', 'title': 'Paragraphe'},
+                {'model': 'heading1', 'view': 'h1', 'title': 'Titre H1'},
+                {'model': 'heading2', 'view': 'h2', 'title': 'Titre H2'},
+                {'model': 'heading3', 'view': 'h3', 'title': 'Titre H3'},
+            ]
+        }
+    }
+}
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
@@ -22,14 +97,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-from decuople import config
-import dj_database_url
 
 
-SECRET_KEY = config(' SECRET_KEY ')
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-ALLOWED_HOSTS = ['*']
+
+
+
 
 # Si vous utilisez des variables d'environnement
 
@@ -90,13 +162,7 @@ WSGI_APPLICATION = 'mediablog.wsgi.application'
  #       'ENGINE': 'django.db.backends.sqlite3',
  #       'NAME': BASE_DIR / 'db.sqlite3',
  #   }
- #}
-
-DATABASES = {
-     'default': dj_database_url.parse(config('DATABASE_URL'))
-
- }
-
+ #
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -132,69 +198,3 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-import os
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [ os.path.join(MEDIA_ROOT, 'static'), ]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-MEDIA_URL = '/media/'
-CKEDITOR_UPLOAD_PATH = "/uploads/"
-CKEDITOR_IMAGE_BACKEND = "pillow"
-
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': [
-            'heading',
-            '|',
-            'bold', 'italic', 'underline', 'strikethrough',
-            '|',
-            'link',
-            'bulletedList',
-            'numberedList',
-            '|',
-            'blockQuote',
-            'insertTable',
-            'imageUpload',
-            '|',
-            'undo',
-            'redo',
-            '|',
-            'alignment',
-            'fontSize',
-            'fontColor',
-            'fontBackgroundColor',
-            '|',
-            'codeBlock',
-            'htmlEmbed'
-        ],
-
-        'image': {
-            'toolbar': [
-                'imageTextAlternative',
-                'imageStyle:inline',
-                'imageStyle:block',
-                'imageStyle:side',
-            ]
-        },
-
-        'table': {
-            'contentToolbar': [
-                'tableColumn',
-                'tableRow',
-                'mergeTableCells'
-            ]
-        },
-
-        'heading': {
-            'options': [
-                {'model': 'paragraph', 'title': 'Paragraphe'},
-                {'model': 'heading1', 'view': 'h1', 'title': 'Titre H1'},
-                {'model': 'heading2', 'view': 'h2', 'title': 'Titre H2'},
-                {'model': 'heading3', 'view': 'h3', 'title': 'Titre H3'},
-            ]
-        }
-    }
-}
