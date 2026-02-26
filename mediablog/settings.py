@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 from pathlib import Path
-from django.conf.global_settings import MEDIA_ROOT
+from django.conf.global_settings import MEDIA_ROOT, ALLOWED_HOSTS
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,31 +22,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+from decuople import config
+import dj_database_url
+
+
+SECRET_KEY = config(' SECRET_KEY ')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG') == 'True'
-
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
-
-CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',')
-
-import os
-
-# ...
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://starmediablog.onrender.com',
-    'https://www.starmediablog.onrender.com',
-    # Ajoutez d'autres domaines si nécessaire
-]
+DEBUG = True
+ALLOWED_HOSTS = ['*']
 
 # Si vous utilisez des variables d'environnement
-CSRF_TRUSTED_ORIGINS = [
-    f'https://{origin}' for origin in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if origin
-]
-
-if DEBUG:
-    CSRF_TRUSTED_ORIGINS.append('http://localhost:8000')
 
 
 # Application definition
@@ -100,12 +85,17 @@ WSGI_APPLICATION = 'mediablog.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+ #DATABASES = {
+ #   'default': {
+ #       'ENGINE': 'django.db.backends.sqlite3',
+ #       'NAME': BASE_DIR / 'db.sqlite3',
+ #   }
+ #}
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+     'default': dj_database_url.parse(config('DATABASE_URL'))
+
+ }
 
 
 # Password validation
@@ -151,12 +141,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 MEDIA_URL = '/media/'
-
-
-
-
-
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 CKEDITOR_UPLOAD_PATH = "/uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
 
