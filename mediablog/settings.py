@@ -156,9 +156,7 @@ MEDIA_URL = '/media/'
 
 
 
-ALLOWED_HOSTS
-
-
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 CKEDITOR_UPLOAD_PATH = "/uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
 
