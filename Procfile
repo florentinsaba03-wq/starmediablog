@@ -1,1 +1,1 @@
-web: gunicorn mediablog.wsgi
+web: gunicorn mediablog.wsgi:application

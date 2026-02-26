@@ -16,19 +16,37 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&ig2ba5wus6m8&o1g1g@=1gr==(4-jr2)cbgg@e9uix-y1j5s3'
-
+SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get('DEBUG') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
+
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',')
+
+import os
+
+# ...
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://starmediablog.onrender.com',
+    'https://www.starmediablog.onrender.com',
+    # Ajoutez d'autres domaines si nécessaire
+]
+
+# Si vous utilisez des variables d'environnement
+CSRF_TRUSTED_ORIGINS = [
+    f'https://{origin}' for origin in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if origin
+]
+
+if DEBUG:
+    CSRF_TRUSTED_ORIGINS.append('http://localhost:8000')
 
 
 # Application definition
@@ -43,6 +61,8 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
      'articles',
     'django_ckeditor_5',
+    'ckeditor',
+
 
 ]
 
@@ -132,17 +152,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 MEDIA_URL = '/media/'
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev")
-
-DEBUG = os.environ.get("DEBUG", "True") == "True"
-
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
 
-CKEDITOR5_UPLOAD_PATH = "/uploads/"
+
+
+ALLOWED_HOSTS
+
+
+CKEDITOR_UPLOAD_PATH = "/uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
 
-CKEDITOR_5_CONFIGS = {
+CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': [
             'heading',

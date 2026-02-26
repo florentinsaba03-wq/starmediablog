@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.utils import timezone; timezone.now()
 from django_ckeditor_5.fields import CKEditor5Field
+from ckeditor.fields import RichTextField
 from django.urls import reverse
 
 
@@ -45,7 +46,7 @@ class Article(models.Model):
 
     slug = models.SlugField(unique=True, blank=True)
 
-    content = CKEditor5Field('content')
+    content = CKEditor5Field('content', config_name='default')
 
     image = models.ImageField(upload_to="articles/", null=True, blank=True)
 

@@ -34,7 +34,8 @@ sitemaps = {
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('articles.urls')),
-    path('ckeditor5/', include('django_ckeditor_5.urls')),
+    path('django_ckeditor_5/', include('django_ckeditor_5.urls')),
+
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
     path(
     "robots.txt",
