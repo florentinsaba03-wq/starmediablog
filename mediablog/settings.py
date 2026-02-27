@@ -18,7 +18,7 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 DATABASES = {
     'default': dj_database_url.config(
@@ -50,12 +50,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 CKEDITOR_UPLOAD_PATH = "/uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
 ALLOWED_HOSTS = [
-    "starmediablog-1.onrender.com",
-    ".onrender.com",
+    "starmediablog.onrender.com",
+    "www.starmediablog.onrender.com",
     "localhost",
     "127.0.0.1",
 ]
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 CKEDITOR_5_CONFIGS = {
     'default': {
