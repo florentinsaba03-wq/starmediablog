@@ -3,15 +3,57 @@ from .models import Article, Category, Comment
 from .forms import CommentForm
 from django.core.paginator import Paginator
 
+
 def home(request):
 
-    articles = Article.objects.filter(status='published').order_by('-created_at')
+    # HERO ARTICLE (dernier article sport par exemple)
+    hero = Article.objects.filter(
+        status='published',
+        category__slug='sport'
+    ).order_by('-created_at').first()
 
-    hero = Article.objects.filter(status='published').order_by('-created_at').first()
+    # ARTICLES SECONDAIRES
+    secondary = Article.objects.filter(
+        status='published',
+        category__slug='sport'
+    ).order_by('-created_at')[1:5]
 
-    secondary = Article.objects.filter(status='published').order_by('-created_at')[1:5]
-    trending = Article.objects.filter(status='published').order_by('-views')[:5]
-    context = {'hero': hero, 'secondary': secondary, 'trending': trending}
+    # TRENDING ARTICLES
+    trending = Article.objects.filter(
+        status='published',
+        categoryslugin=['sport', 'musique', 'sociopolitique', 'divers']
+    ).order_by('-views')[:5]
+
+    # ARTICLES PAR CATÉGORIE
+    sport_articles = Article.objects.filter(
+        status='published',
+        category__slug='sport'
+    ).order_by('-created_at')[:5]
+
+    musique_articles = Article.objects.filter(
+        status='published',
+        category__slug='musique'
+    ).order_by('-created_at')[:5]
+
+    sociopolitique_articles = Article.objects.filter(
+        status='published',
+        category__slug='sociopolitique'
+    ).order_by('-created_at')[:5]
+
+    divers_articles = Article.objects.filter(
+        status='published',
+        category__slug='divers'
+    ).order_by('-created_at')[:5]
+
+    context = {
+        'hero': hero,
+        'secondary': secondary,
+        'trending': trending,
+        'sport_articles': sport_articles,
+        'musique_articles': musique_articles,
+        'sociopolitique_articles': sociopolitique_articles,
+        'divers_articles': divers_articles,
+    }
 
     return render(request, 'home.html', context)
 
