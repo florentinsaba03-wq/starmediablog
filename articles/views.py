@@ -21,7 +21,7 @@ def home(request):
     # TRENDING ARTICLES
     trending = Article.objects.filter(
         status='published',
-        categoryslugin=['sport', 'musique', 'sociopolitique', 'divers']
+        category__slug__in=['sport', 'musique', 'sociopolitique', 'divers']
     ).order_by('-views')[:5]
 
     # ARTICLES PAR CATÉGORIE
