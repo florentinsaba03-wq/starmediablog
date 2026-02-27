@@ -40,7 +40,8 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
 ]
 DEBUG = config('DEBUG', default=True, cast=bool)
-CKEDITOR_CONFIGS = {
+
+CKEDITOR_5_CONFIGS = {
     'default': {
         'toolbar': [
             'heading',
@@ -48,6 +49,7 @@ CKEDITOR_CONFIGS = {
             'bold', 'italic', 'underline', 'strikethrough',
             '|',
             'link',
+            'insertImage',
             'bulletedList',
             'numberedList',
             '|',
@@ -124,6 +126,8 @@ INSTALLED_APPS = [
      'articles',
     'django_ckeditor_5',
     'ckeditor',
+    'cloudinary',
+    'cloudinary_storage',
 
 
 ]
@@ -203,3 +207,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
+
+import cloudinary
+
+cloudinary.config(
+    cloud_name="dn7cinmnb",
+    api_key="821989236997967",
+    api_secret="01VHniY1g_Z3cSFt7RJpLUjnD9Q",
+    secure=True
+)
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': "dn7cinmnb",
+    'API_KEY': "821989236997967",
+    'API_SECRET': "01VHniY1g_Z3cSFt7RJpLUjnD9Q",
+    'SECURE': True,
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

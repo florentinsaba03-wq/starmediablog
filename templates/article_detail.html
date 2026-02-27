@@ -4,7 +4,10 @@
 </p>
 
 {% if article.image %}
-<img src="{{ article.image.url }}" alt="{{ article.title }}" class="img-fluid">
+<img src="{{ article.image.url }}"
+     alt="StarMediaBlog - {{ article.title }}"
+     class="img-fluid"
+     loading="lazy">
 {% endif %}
 
 <p>{{ article.content |safe }}</p>
