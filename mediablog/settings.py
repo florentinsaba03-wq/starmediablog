@@ -33,7 +33,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 MEDIA_URL = '/media/'
 CKEDITOR_UPLOAD_PATH = "/uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    "starmediablog-1.onrender.com",
+    ".onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 DEBUG = config('DEBUG', default=True, cast=bool)
 CKEDITOR_CONFIGS = {
     'default': {
