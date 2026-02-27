@@ -1,3 +1,4 @@
+{% load static %}
 <h1>{{ article.title }}</h1>
 <p class="text-muted">
     {{ article.views }} vues • {{ article.created_at|date:"d M Y" }}
@@ -8,6 +9,8 @@
      alt="StarMediaBlog - {{ article.title }}"
      class="img-fluid"
      loading="lazy">
+{% else %}
+    <img src="{% static 'images/logo.png' %}" height="80" loading="lazy">
 {% endif %}
 
 <p>{{ article.content |safe }}</p>

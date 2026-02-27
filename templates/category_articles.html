@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-
+{% load static %}
 <head>
 
 <title>{{ category.name }} - StarMediaBlog</title>
@@ -32,6 +32,8 @@
 {% if article.image %}
 <img src="{{ article.image.url }}" class="card-img-top"
      loading="lazy">
+{% else %}
+    <img src="{% static 'images/logo.png' %}" height="80" loading="lazy">
 {% endif %}
 
 <div class="card-body">

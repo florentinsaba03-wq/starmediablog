@@ -39,13 +39,19 @@
 <div class="row mb-4">
 
 <div class="col-12 position-relative">
-
+{% if article.image %}
+    <img src="{{ article.image.url }}" width="680" height="380" loading="lazy">
+{% else %}
+    <img src="{% static 'images/logo.png' %}" height="80" loading="lazy">
+{% endif %}
 {% if hero.image %}
 <img src="{{ hero.image.url }}"
      class=" w-100 hero-img-fluid"
      alt="{{ article.title }}"
      width="680" height="360"
      loading="lazy">
+{% else %}
+    <img src="{% static 'images/logo.png' %}" height="80" loading="lazy">
 {% endif %}
 
 <div class="hero-overlay">
@@ -81,6 +87,8 @@
  alt="{{ article.title }}"
      width="680" height="380"
      loading="lazy">
+{% else %}
+    <img src="{% static 'images/logo.png' %}" height="80" loading="lazy">
 {% endif %}
 
 <div class="card-body">
@@ -113,8 +121,11 @@
 <h2>Sport</h2>
 {% for article in sport_articles %}
 <a href="{% url 'article_detail' article.slug %}">
-    <img src="{{ article.image.url }}" width="680" height="380"
-     loading="lazy">
+{% if article.image %}
+    <img src="{{ article.image.url }}" width="680" height="380" loading="lazy">
+{% else %}
+    <img src="{% static 'images/logo.png' %}" height="80" loading="lazy">
+{% endif %}
     <h3>{{ article.title }}</h3>
 </a>
 {% endfor %}
@@ -122,8 +133,11 @@
 <h2>Musique</h2>
 {% for article in musique_articles %}
 <a href="{% url 'article_detail' article.slug %}">
-    <img src="{{ article.image.url }}" width="680" height="380"
-     loading="lazy">
+{% if article.image %}
+    <img src="{{ article.image.url }}" width="680" height="380" loading="lazy">
+{% else %}
+    <img src="{% static 'images/logo.png' %}" height="80" loading="lazy">
+{% endif %}
     <h3>{{ article.title }}</h3>
 </a>
 {% endfor %}
@@ -131,8 +145,12 @@
 <h2>Sociopolitique</h2>
 {% for article in sociopolitique_articles %}
 <a href="{% url 'article_detail' article.slug %}">
-    <img src="{{ article.image.url }}" width="680" height="380"
-     loading="lazy">
+    {% if article.image %}
+    <img src="{{ article.image.url }}" width="680" height="380" loading="lazy">
+{% else %}
+    <img src="{% static 'images/logo.png' %}" height="80" loading="lazy">
+{% endif %}
+    <img src="{{ article.image.url }}" width="680" height="380">
     <h3>{{ article.title }}</h3>
 </a>
 {% endfor %}
@@ -140,8 +158,11 @@
 <h2>Divers</h2>
 {% for article in divers_articles %}
 <a href="{% url 'article_detail' article.slug %}">
-    <img src="{{ article.image.url }}" width="680" height="380"
-     loading="lazy">
+{% if article.image %}
+    <img src="{{ article.image.url }}" width="680" height="380" loading="lazy">
+{% else %}
+    <img src="{% static 'images/logo.png' %}" height="80" loading="lazy">
+{% endif %}
     <h3>{{ article.title }}</h3>
 </a>
 {% endfor %}
@@ -160,6 +181,8 @@
      alt="{{ article.title }}"
      width="680" height="380"
      loading="lazy">
+{% else %}
+    <img src="{% static 'images/logo.png' %}" height="80" loading="lazy">
 {% endif %}
 <h6>{{ article.title }}</h6>
 
