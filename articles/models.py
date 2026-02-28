@@ -1,26 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
-from django.utils import timezone; timezone.now()
-from django_ckeditor_5.fields import CKEditor5Field
-from ckeditor.fields import RichTextField
 from django.urls import reverse
+from django_ckeditor_5.fields import CKEditor5Field
+from cloudinary.models import CloudinaryField
 
 
 class Category(models.Model):
 
     name = models.CharField(max_length=100)
-
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
-
         if not self.slug:
             self.slug = slugify(self.name)
-
         super().save(*args, **kwargs)
 
-    def __str__(self):
+    def str(self):
         return self.name
 
 
@@ -31,6 +27,7 @@ class Article(models.Model):
         on_delete=models.CASCADE,
         related_name="articles"
     )
+
     STATUS_CHOICES = (
         ('draft', 'draft'),
         ('published', 'published'),
@@ -48,19 +45,23 @@ class Article(models.Model):
 
     content = CKEditor5Field('content', config_name='default')
 
-    image = models.ImageField(upload_to="articles/", null=True, blank=True)
+    # ✅ CORRECTION CLOUDINARY
+    image = CloudinaryField(
+        'image',
+        folder='starmediablog/articles/',
+        blank=True,
+        null=True
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
+
     views = models.PositiveIntegerField(default=0)
-    def __str__(self):
+
+    def str(self):
         return self.title
 
     def get_absolute_url(self):
         return reverse('article_detail', kwargs={'slug': self.slug})
-
-
-
-
 
 
 class Comment(models.Model):
@@ -72,12 +73,14 @@ class Comment(models.Model):
     )
 
     name = models.CharField(max_length=100)
+
     email = models.EmailField()
+
     content = models.TextField()
 
     created_at = models.DateTimeField(auto_now_add=True)
+
     active = models.BooleanField(default=True)
 
-    def __str__(self):
+    def str(self):
         return f"comment by {self.name}"
-

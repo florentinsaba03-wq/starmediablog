@@ -44,11 +44,12 @@ CLOUDINARY_STORAGE = {
 }
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
 STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static'), ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-CKEDITOR_UPLOAD_PATH = "/uploads/"
-CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_5_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
 ALLOWED_HOSTS = [
     "starmediablog.onrender.com",
     "www.starmediablog.onrender.com",
@@ -141,7 +142,6 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
      'articles',
     'django_ckeditor_5',
-    'ckeditor',
     'cloudinary',
     'cloudinary_storage',
 
