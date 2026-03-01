@@ -1,5 +1,5 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from articles.models import Article
 
@@ -23,18 +23,35 @@ def register(request):
     return render(request, "accounts/register.html", {"form": form})
 
 
-def profile(request, username):
+@login_required
+def profile(request):
 
-    user = User.objects.get(username=username)
+    user = request.user
+
+    articles = Article.objects.filter(author=user).order_by('-created_at')
+
+    context = {
+        'user': user,
+        'articles': articles
+    }
+
+    return render(request, 'accounts/profile.html', context)
+
+
+from django.contrib.auth.models import User
+
+def author_profile(request, username):
+
+    author = User.objects.get(username=username)
 
     articles = Article.objects.filter(
-        author=user,
-        status="published"
-    )
+        author=author,
+        status='published'
+    ).order_by('-created_at')
 
-    return render(request, "accounts/profile.html", {
+    context = {
+        'author': author,
+        'articles': articles
+    }
 
-        "profile_user": user,
-        "articles": articles
-
-    })
+    return render(request, 'author_profile.html', context)

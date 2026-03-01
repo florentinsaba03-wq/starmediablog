@@ -33,4 +33,10 @@ urlpatterns = [
         name='profile'
     ),
 
+    path(
+    'author/<str:username>/',
+    views.author_profile,
+    name='author_profile'
+)
+
 ]
