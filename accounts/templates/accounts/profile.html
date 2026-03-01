@@ -1,0 +1,41 @@
+{% include "navbar.html" %}
+
+<div class="container mt-5">
+
+<h2>
+
+Articles de {{ profile_user.username }}
+
+</h2>
+
+<hr>
+
+{% for article in articles %}
+
+<div class="mb-4">
+
+<a href="{% url 'article_detail' article.slug %}">
+
+<h4>
+
+{{ article.title }}
+
+</h4>
+
+</a>
+
+<p>
+
+{{ article.views }} vues
+
+•
+
+❤️ {{ article.total_likes }}
+
+</p>
+
+</div>
+
+{% endfor %}
+
+</div>

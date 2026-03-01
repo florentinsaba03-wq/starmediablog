@@ -1,0 +1,12 @@
+<h1>Dashboard</h1>
+
+{% for article in articles %}
+
+<h3>{{ article.title }}</h3>
+
+<p>
+{{ article.views }} vues
+{{ article.likes.count }} likes
+</p>
+
+{% endfor %}

@@ -49,6 +49,10 @@ STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static'), ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 CKEDITOR_5_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+CKEDITOR_UPLOAD_PATH = "starmediablog/articles/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+LOGIN_URL = "/accounts/login/"
 
 ALLOWED_HOSTS = [
     "starmediablog.onrender.com",
@@ -144,6 +148,7 @@ INSTALLED_APPS = [
     'django_ckeditor_5',
     'cloudinary',
     'cloudinary_storage',
+    'accounts',
 
 
 ]

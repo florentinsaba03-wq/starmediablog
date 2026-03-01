@@ -2,6 +2,11 @@ from django.shortcuts import render, get_object_or_404
 from .models import Article, Category, Comment
 from .forms import CommentForm
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
+from .models import Like
+from django.contrib.auth.models import User
 
 
 def home(request):
@@ -100,3 +105,66 @@ def category_articles(request, slug):
     }
 
     return render(request, 'category_articles.html', context)
+
+@login_required
+def like_article(request, slug):
+
+    article = get_object_or_404(Article, slug=slug)
+
+    if request.user in article.likes.all():
+
+        article.likes.remove(request.user)
+        liked = False
+
+    else:
+
+        article.likes.add(request.user)
+        liked = True
+
+    return JsonResponse({
+
+        "liked": liked,
+        "total_likes": article.total_likes()
+
+    })
+
+
+@login_required
+def like_article(request, slug):
+
+    article = get_object_or_404(Article, slug=slug)
+
+    like, created = Like.objects.get_or_create(
+        user=request.user,
+        article=article
+    )
+
+    if not created:
+        like.delete()
+
+    return redirect('article_detail', slug=slug)
+
+def author_profile(request, username):
+
+    author = get_object_or_404(User, username=username)
+
+    articles = Article.objects.filter(
+        author=author,
+        status="published"
+    )
+
+    return render(request, "author_profile.html", {
+        "author": author,
+        "articles": articles
+    })
+
+@login_required
+def dashboard(request):
+
+    articles = Article.objects.filter(
+        author=request.user
+    )
+
+    return render(request, "dashboard.html", {
+        "articles": articles
+    })

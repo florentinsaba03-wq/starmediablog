@@ -22,6 +22,7 @@ from django.contrib.sitemaps.views import sitemap
 from articles.sitemaps import ArticleSitemap
 from django.views.generic import TemplateView
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.contrib.auth import views as auth_views
 
 
 
@@ -42,5 +43,12 @@ urlpatterns = [
     "robots.txt",
     TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
 ),
+    path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
+
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+
+    path('register/', include('accounts.urls')),
+    path("accounts/", include("django.contrib.auth.urls")),
+    path("accounts/", include("accounts.urls")),
 
 ]

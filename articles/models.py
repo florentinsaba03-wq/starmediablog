@@ -7,7 +7,6 @@ from cloudinary.models import CloudinaryField
 
 
 class Category(models.Model):
-
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True)
 
@@ -22,15 +21,22 @@ class Category(models.Model):
 
 class Article(models.Model):
 
-    category = models.ForeignKey(
-        Category,
+    STATUS_CHOICES = (
+        ('draft', 'draft'),
+        ('published', 'published'),
+    )
+
+    # ✅ auteur
+    author = models.ForeignKey(
+        User,
         on_delete=models.CASCADE,
         related_name="articles"
     )
 
-    STATUS_CHOICES = (
-        ('draft', 'draft'),
-        ('published', 'published'),
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        related_name="articles"
     )
 
     status = models.CharField(
@@ -45,25 +51,49 @@ class Article(models.Model):
 
     content = CKEditor5Field('content', config_name='default')
 
-    # ✅ CORRECTION CLOUDINARY
+    # image cloudinary
     image = CloudinaryField(
         'image',
-        folder='starmediablog/articles/',
+        folder='starmediablog/articles/images/',
         blank=True,
         null=True
     )
+
+    # 🎥 vidéo cloudinary
+    video = CloudinaryField(
+        'video',
+        resource_type="video",
+        folder='starmediablog/articles/videos/',
+        blank=True,
+        null=True
+    )
+
+    # 🎥 youtube optionnel
+    youtube_url = models.URLField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     views = models.PositiveIntegerField(default=0)
 
-    def str(self):
-        return self.title
+
+    def total_likes(self):
+        return self.likes.count()
+
+    def save(self, *args, **kwargs):
+
+        if not self.slug:
+            self.slug = slugify(self.title)
+
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('article_detail', kwargs={'slug': self.slug})
 
+    def str(self):
+        return self.title
 
+
+# commentaires (déjà OK)
 class Comment(models.Model):
 
     article = models.ForeignKey(
@@ -84,3 +114,23 @@ class Comment(models.Model):
 
     def str(self):
         return f"comment by {self.name}"
+
+class Like(models.Model):
+        user = models.ForeignKey(
+            User,
+            on_delete=models.CASCADE
+        )
+
+        article = models.ForeignKey(
+            Article,
+            on_delete=models.CASCADE,
+            related_name="article_likes"
+        )
+
+        created_at = models.DateTimeField(auto_now_add=True)
+
+        class Meta:
+            unique_together = ('user', 'article')
+
+        def str(self):
+            return f"{self.user.username} likes {self.article.title}"

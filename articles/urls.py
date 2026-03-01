@@ -9,4 +9,8 @@ urlpatterns = [
 
     path('category/<slug:slug>/', views.category_articles, name='category_articles'),
 
+    path('like/<slug:slug>/', views.like_article, name='like_article'),
+    path('like/<slug:slug>/', views.like_article, name='like_article'),
+    path('author/<str:username>/', views.author_profile, name="author_profile"),
+
 ]
