@@ -106,28 +106,8 @@ def category_articles(request, slug):
 
     return render(request, 'category_articles.html', context)
 
-@login_required
-def like_article(request, slug):
 
-    article = get_object_or_404(Article, slug=slug)
-
-    if request.user in article.likes.all():
-
-        article.likes.remove(request.user)
-        liked = False
-
-    else:
-
-        article.likes.add(request.user)
-        liked = True
-
-    return JsonResponse({
-
-        "liked": liked,
-        "total_likes": article.total_likes()
-
-    })
-
+from django.http import JsonResponse
 
 @login_required
 def like_article(request, slug):
@@ -135,14 +115,20 @@ def like_article(request, slug):
     article = get_object_or_404(Article, slug=slug)
 
     like, created = Like.objects.get_or_create(
-        user=request.user,
-        article=article
+        article=article,
+        user=request.user
     )
 
     if not created:
         like.delete()
+        liked = False
+    else:
+        liked = True
 
-    return redirect('article_detail', slug=slug)
+    return JsonResponse({
+        'likes': article.likes.count(),
+        'liked': liked
+    })
 
 def author_profile(request, username):
 

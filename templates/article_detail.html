@@ -9,39 +9,24 @@ Auteur :
 
 </p>
 <h1>{{ article.title }}</h1>
-<p>
-
-❤️ {{ article.likes.count }} likes
-
 {% if user.is_authenticated %}
-<a href="{% url 'like_article' article.slug %}" class="btn btn-danger btn-sm">
-    Like👍 /  Unlike👎
-</a>
+
+<button
+    id="like-btn"
+    data-slug="{{ article.slug }}"
+    class="btn btn-outline-danger">
+
+    ❤️ <span id="like-count">{{ article.likes.count }}</span>
+
+</button>
+
 {% else %}
+
 <p>
-<a href="/accounts/login/">Connectez-vous pour liker</a>
+    <a href="/accounts/login/">Connectez-vous pour liker</a>
 </p>
+
 {% endif %}
-
-</p>
-
-<p>
-
-Auteur :
-{{ article.author.username }}
-
-•
-
-{{ article.views }} vues
-
-•
-
-❤️{{ article.total_likes }}
-
-</p>
-<p class="text-muted">
-    {{ article.views }} vues • {{ article.created_at|date:"d M Y" }}
-</p>
 
 {% if article.image %}
 <img src="{{ article.image.url }}"
@@ -109,5 +94,23 @@ Auteur :
     </button>
 
 </form>
+<script>
+
+document.getElementById("like-btn").onclick = function() {
+
+    const slug = this.dataset.slug;
+
+    fetch(/like/${slug}/)
+    .then(response => response.json())
+    .then(data => {
+
+        document.getElementById("like-count").innerText = data.likes;
+
+    });
+
+}
+
+</script>
+
 
 {% include "footer.html" %}

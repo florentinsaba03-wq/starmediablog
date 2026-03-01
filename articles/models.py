@@ -122,21 +122,22 @@ class Comment(models.Model):
         return f"comment by {self.name}"
 
 class Like(models.Model):
-        user = models.ForeignKey(
-            User,
-            on_delete=models.CASCADE
-        )
 
-        article = models.ForeignKey(
-            Article,
-            on_delete=models.CASCADE,
-            related_name="ikes"
-        )
+    article = models.ForeignKey(
+        Article,
+        on_delete=models.CASCADE,
+        related_name="likes"
+    )
 
-        created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
 
-        class Meta:
-            unique_together = ('user', 'article')
+    created_at = models.DateTimeField(auto_now_add=True)
 
-        def str(self):
-            return f"{self.user.username} likes {self.article.title}"
+    class Meta:
+        unique_together = ('article', 'user')
+
+    def __str__(self):
+        return f"{self.user.username} likes {self.article.title}"
