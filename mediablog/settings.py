@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 from pathlib import Path
-from django.conf.global_settings import MEDIA_ROOT, ALLOWED_HOSTS
+from django.conf.global_settings import ALLOWED_HOSTS
 import os
 from decouple import config
 import dj_database_url
@@ -144,10 +144,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
      'articles',
+     'accounts',
     'django_ckeditor_5',
     'cloudinary',
     'cloudinary_storage',
-    'accounts',
+
 
 
 ]

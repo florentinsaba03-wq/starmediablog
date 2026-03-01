@@ -33,14 +33,13 @@ sitemaps = {
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('articles.urls')),
-    path('django_ckeditor_5/', include('django_ckeditor_5.urls')),
+    path("accounts/", include("accounts.urls")),
 
+    path('django_ckeditor_5/', include('django_ckeditor_5.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
     path(
     "robots.txt",
     TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
 ),
-    path("accounts/", include("django.contrib.auth.urls")),
-    path("accounts/", include("accounts.urls")),
 
 ]
