@@ -58,6 +58,12 @@ class Article(models.Model):
         blank=True,
         null=True
     )
+    # ❤️ likes
+    likes = models.ManyToManyField(
+        User,
+        related_name="liked_articles",
+        blank=True
+    )
 
     # 🎥 vidéo cloudinary
     video = CloudinaryField(
