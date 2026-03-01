@@ -124,7 +124,7 @@ class Like(models.Model):
         article = models.ForeignKey(
             Article,
             on_delete=models.CASCADE,
-            related_name="article_likes"
+            related_name="ikes"
         )
 
         created_at = models.DateTimeField(auto_now_add=True)
