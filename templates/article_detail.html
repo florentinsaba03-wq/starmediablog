@@ -50,8 +50,11 @@ Auteur :
 
 {% if article.youtube_url %}
 <div class="ratio ratio-16x9">
-    <iframe src="{{ article.youtube_url|cut:'watch?v='|add:'embed/' }}"
-    allowfullscreen></iframe>
+    <iframe
+        src="https://www.youtube.com/embed/{{ article.youtube_url }}"
+        frameborder="0"
+        allowfullscreen>
+    </iframe>
 </div>
 {% endif %}
 <p>{{ article.content |safe }}</p>
