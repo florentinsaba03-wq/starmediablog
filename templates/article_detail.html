@@ -48,10 +48,10 @@ Auteur :
 {% endif %}
 
 
-{% if article.youtube_url %}
+{% if article.youtube_id %}
 <div class="ratio ratio-16x9">
     <iframe
-        src="https://www.youtube.com/embed/{{ article.youtube_url|cut:'https://www.youtube.com/watch?v=' }}"
+        src="https://www.youtube.com/embed/{{ article.youtube_id }}"
         frameborder="0"
         allowfullscreen>
     </iframe>

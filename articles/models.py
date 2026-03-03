@@ -69,7 +69,7 @@ class Article(models.Model):
     )
 
     # 🎥 youtube optionnel
-    youtube_url = models.URLField(blank=True, null=True)
+    youtube_id = models.CharField(max_length=50, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
