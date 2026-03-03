@@ -51,7 +51,7 @@ Auteur :
 {% if article.youtube_url %}
 <div class="ratio ratio-16x9">
     <iframe
-        src="https://www.youtube.com/embed/{{ article.youtube_url }}"
+        src="https://www.youtube.com/embed/{{ article.youtube_url|cut:'https://www.youtube.com/watch?v=' }}"
         frameborder="0"
         allowfullscreen>
     </iframe>
