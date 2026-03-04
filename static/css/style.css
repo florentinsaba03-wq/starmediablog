@@ -2,6 +2,21 @@
     background-color: #0d6efd !important;
     transition: 0.3s;
 }
+.btn-guide {
+    display: inline-block;
+    padding: 12px 20px;
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.btn-guide:hover {
+    background-color: #333;
+}
+
+
 
 .logo {
     height: 45px;

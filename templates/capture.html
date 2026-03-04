@@ -1,0 +1,10 @@
+<h2>{{ guide.title }}</h2>
+<p>{{ guide.description }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.email }}
+    <button type="submit">
+        Télécharger le guide
+    </button>
+</form>

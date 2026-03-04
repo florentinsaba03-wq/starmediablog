@@ -7,6 +7,13 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from .models import Like
 from django.contrib.auth.models import User
+from django.http import FileResponse
+from .models import Guide
+from .forms import SubscriberForm
+from django.db.models import F
+from django.db import IntegrityError
+
+
 
 
 def home(request):
@@ -154,3 +161,47 @@ def dashboard(request):
     return render(request, "dashboard.html", {
         "articles": articles
     })
+
+def capture_email(request, slug):
+    guide = get_object_or_404(Guide, slug=slug)
+
+    if request.method == "POST":
+        form = SubscriberForm(request.POST)
+
+        if form.is_valid():
+            try:
+                subscriber = form.save(commit=False)
+                subscriber.guide = guide
+                subscriber.save()
+            except IntegrityError:
+                # L'email existe déjà pour ce guide
+                pass
+
+            request.session[f'guide_access_{guide.id}'] = True
+            return redirect('download_guide', slug=guide.slug)
+    else:
+        form = SubscriberForm()
+
+    return render(request, 'capture.html', {
+        'form': form,
+        'guide': guide
+    })
+
+
+def download_guide(request, slug):
+    guide = get_object_or_404(Guide, slug=slug)
+
+    # 🔒 Vérifie si l'utilisateur a accès après capture email
+    if not request.session.get(f'guide_access_{guide.id}'):
+        return redirect('capture', slug=guide.slug)
+
+    # 📊 Incrémentation atomique du compteur
+    Guide.objects.filter(id=guide.id).update(
+        downloads_count=F('downloads_count') + 1
+    )
+
+    # 📥 Téléchargement sécurisé du fichier
+    return FileResponse(
+        guide.pdf.open('rb'),
+        as_attachment=True
+    )

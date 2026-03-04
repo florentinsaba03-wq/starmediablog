@@ -10,7 +10,8 @@ urlpatterns = [
     path('category/<slug:slug>/', views.category_articles, name='category_articles'),
 
     path('like/<slug:slug>/', views.like_article, name='like_article'),
-    path('like/<slug:slug>/', views.like_article, name='like_article'),
     path('author/<str:username>/', views.author_profile, name="author_profile"),
+    path('guide/<slug:slug>/', views.capture_email, name='capture'),
+    path('download/<slug:slug>/', views.download_guide, name='download_guide'),
 
 ]

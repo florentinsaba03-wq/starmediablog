@@ -19,6 +19,9 @@ from django.urls import path, include
 from django.contrib.sitemaps.views import sitemap
 from articles.sitemaps import ArticleSitemap
 from django.views.generic import TemplateView
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 
 
@@ -43,3 +46,7 @@ urlpatterns = [
 ),
 
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

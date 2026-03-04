@@ -15,7 +15,7 @@ class Category(models.Model):
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
-    def str(self):
+    def __str__(self):
         return self.name
 
 
@@ -89,7 +89,7 @@ class Article(models.Model):
     def get_absolute_url(self):
         return reverse('article_detail', kwargs={'slug': self.slug})
 
-    def str(self):
+    def __str__(self):
         return self.title
 
 
@@ -112,7 +112,7 @@ class Comment(models.Model):
 
     active = models.BooleanField(default=True)
 
-    def str(self):
+    def __str__(self):
         return f"comment by {self.name}"
 
 class Like(models.Model):
@@ -135,3 +135,34 @@ class Like(models.Model):
 
     def __str__(self):
         return f"{self.user.username} likes {self.article.title}"
+
+
+class Guide(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True)
+    description = models.TextField()
+    pdf = models.FileField(upload_to='guides/')
+    created_at = models.DateTimeField(auto_now_add=True)
+    downloads_count = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.title
+
+
+class Subscriber(models.Model):
+    email = models.EmailField()
+    guide = models.ForeignKey(Guide, on_delete=models.CASCADE)
+    subscribed_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.email} - {self.guide.title}"
+    class Meta:
+        unique_together = ('email', 'guide')
+
+class Lead(models.Model):
+    email = models.EmailField()
+    guide = models.ForeignKey(Guide, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def str(self):
+        return f"{self.email} - {self.guide.title}"

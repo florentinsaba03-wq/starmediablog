@@ -64,6 +64,8 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 CKEDITOR_5_CONFIGS = {
     'default': {
         'toolbar': [
+            'sourceEditing',
+            '|',
             'heading',
             '|',
             'bold', 'italic', 'underline', 'strikethrough',
@@ -116,6 +118,9 @@ CKEDITOR_5_CONFIGS = {
         }
     }
 }
+
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
