@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.sitemaps.views import sitemap
 from articles.sitemaps import ArticleSitemap
+from articles.sitemaps import ArticleSitemap, CategorySitemap, StaticSitemap
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
@@ -29,6 +30,8 @@ from django.conf.urls.static import static
 
 sitemaps = {
     'articles': ArticleSitemap,
+    'categories': CategorySitemap,   # ← Nouveau
+    'static': StaticSitemap,         # ← Nouveau
 }
 
 

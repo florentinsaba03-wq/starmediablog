@@ -4,7 +4,7 @@ from django.utils.text import slugify
 from django.urls import reverse
 from django_ckeditor_5.fields import CKEditor5Field
 from cloudinary.models import CloudinaryField
-
+import requests
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -164,8 +164,9 @@ class Lead(models.Model):
     guide = models.ForeignKey(Guide, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def str(self):
+    def __str__(self):
         return f"{self.email} - {self.guide.title}"
+
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
