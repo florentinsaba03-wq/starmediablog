@@ -12,6 +12,8 @@ from .models import Guide
 from .forms import SubscriberForm
 from django.db.models import F
 from django.db import IntegrityError
+from django.http import HttpResponse
+
 
 
 
@@ -205,3 +207,6 @@ def download_guide(request, slug):
         guide.pdf.open('rb'),
         as_attachment=True
     )
+
+def google_verification(request):
+    return HttpResponse("google-site-verification: google5800450418fec533.html")

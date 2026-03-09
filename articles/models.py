@@ -166,3 +166,24 @@ class Lead(models.Model):
 
     def str(self):
         return f"{self.email} - {self.guide.title}"
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import Article
+from .signals import ping_google
+
+@receiver(post_save, sender=Article)
+def notify_search_engines(sender, instance, created, **kwargs):
+    if created:
+        ping_google()
+
+@receiver(post_save, sender=Article)
+def ping_bing(sender, instance, created, **kwargs):
+    if created:
+        sitemap_url = "https://starmediablog.onrender.com/sitemap.xml"
+        ping_url = f"https://www.bing.com/ping?sitemap={sitemap_url}"
+
+        try:
+            requests.get(ping_url)
+        except:
+            pass

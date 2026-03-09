@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import google_verification
 
 urlpatterns = [
 
@@ -13,5 +14,9 @@ urlpatterns = [
     path('author/<str:username>/', views.author_profile, name="author_profile"),
     path('guide/<slug:slug>/', views.capture_email, name='capture'),
     path('download/<slug:slug>/', views.download_guide, name='download_guide'),
+    path(
+        "google5800450418fec533.html",
+        google_verification
+    ),
 
 ]
