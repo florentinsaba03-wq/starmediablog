@@ -28,17 +28,16 @@ DATABASES = {
 import cloudinary
 
 cloudinary.config(
-    cloud_name="dn7cinmnb",
-    api_key="821989236997967",
-    api_secret="01VHniY1g_Z3cSFt7RJpLUjnD9Q",
+    cloud_name=config("CLOUDINARY_CLOUD_NAME"),
+    api_key=config("CLOUDINARY_API_KEY"),
+    api_secret=config("CLOUDINARY_API_SECRET"),
     secure=True
 )
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': "dn7cinmnb",
-    'API_KEY': "821989236997967",
-    'API_SECRET': "01VHniY1g_Z3cSFt7RJpLUjnD9Q",
-    'SECURE': True,
+    "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": config("CLOUDINARY_API_KEY"),
+    "API_SECRET": config("CLOUDINARY_API_SECRET"),
 }
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 STATIC_URL = '/static/'
