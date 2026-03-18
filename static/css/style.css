@@ -504,3 +504,460 @@ background-color: #000;
 @media (max-width: 576px) {
     .footer { padding: 30px 0 16px; }
 }
+/* ════════════════════════════════════
+   ARTICLE CAN — STYLES SPÉCIAUX
+════════════════════════════════════ */
+
+/* Google Fonts pour les articles rich-content */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Merriweather:ital,wght@0,700;1,400&family=Open+Sans:wght@300;400;600&display=swap');
+
+/* ── TOP BAR ── */
+.topbar {
+    background: #111111;
+    padding: 10px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.topbar-logo {
+    font-family: 'Oswald', Arial, sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #FF6B00;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+.topbar-date {
+    font-size: 12px;
+    color: #aaaaaa;
+    letter-spacing: 1px;
+}
+
+/* ── HERO ARTICLE ── */
+.hero-article {
+    background: #111111;
+    padding: 60px 24px 50px;
+    text-align: center;
+    border-bottom: 5px solid #E8230A;
+}
+.hero-eyebrow {
+    display: inline-block;
+    background: #E8230A;
+    color: #ffffff;
+    font-family: 'Oswald', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    margin-bottom: 28px;
+}
+.hero-article h1 {
+    font-family: 'Oswald', Arial, sans-serif;
+    font-size: 72px;
+    font-weight: 700;
+    color: #ffffff;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 12px;
+}
+.hero-article h1 span {
+    color: #FF6B00;
+    display: block;
+}
+.hero-sub {
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-size: 17px;
+    color: #cccccc;
+    max-width: 680px;
+    margin: 0 auto 36px;
+    font-weight: 300;
+    line-height: 1.7;
+}
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    border: 1px solid #333333;
+    max-width: 600px;
+    margin: 0 auto;
+}
+.hero-stat {
+    padding: 16px 28px;
+    border-right: 1px solid #333333;
+    flex: 1;
+    min-width: 150px;
+}
+.hero-stat:last-child { border-right: none; }
+.hero-stat-label {
+    font-size: 10px;
+    color: #FF6B00;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 4px;
+}
+.hero-stat-value {
+    font-family: 'Oswald', Arial, sans-serif;
+    font-size: 18px;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* ── SECTION EYEBROW ── */
+.section-eyebrow {
+    font-family: 'Oswald', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #E8230A;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+.section-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 2px;
+    background: #E8230A;
+}
+.section-title-can {
+    font-family: 'Oswald', Arial, sans-serif;
+    font-size: 40px;
+    font-weight: 700;
+    color: #111111;
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin-bottom: 30px;
+}
+
+/* ── INTRO ── */
+.intro-section-can {
+    padding: 56px 0 48px;
+    border-bottom: 1px solid #e0e0e0;
+}
+.intro-pull {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 22px;
+    font-style: italic;
+    line-height: 1.5;
+    color: #111111;
+    border-left: 5px solid #FF6B00;
+    padding-left: 24px;
+    margin-bottom: 30px;
+    max-width: 760px;
+}
+.intro-pull strong {
+    font-style: normal;
+    color: #E8230A;
+}
+.intro-cols {
+    display: flex;
+    gap: 36px;
+    flex-wrap: wrap;
+}
+.intro-col {
+    flex: 1 1 280px;
+}
+.intro-col p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #333333;
+    margin-bottom: 14px;
+}
+
+/* ── TIMELINE ── */
+.timeline-section-can {
+    padding: 56px 0 48px;
+    border-bottom: 1px solid #e0e0e0;
+}
+.timeline-item {
+    display: flex;
+    gap: 24px;
+    padding: 28px 0;
+    border-top: 1px solid #eeeeee;
+}
+.timeline-item:last-child { border-bottom: 1px solid #eeeeee; }
+.timeline-date {
+    font-family: 'Oswald', Arial, sans-serif;
+    font-size: 38px;
+    font-weight: 700;
+    color: #eeeeee;
+    -webkit-text-stroke: 1px #cccccc;
+    min-width: 100px;
+    line-height: 1;
+    padding-top: 4px;
+}
+.timeline-meta {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #999999;
+    margin-bottom: 6px;
+}
+.timeline-content h3 {
+    font-family: 'Oswald', Arial, sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #111111;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+.timeline-content p {
+    font-size: 14px;
+    color: #444444;
+    line-height: 1.75;
+}
+.badge-red  { background: #E8230A; color: #ffffff; }
+.badge-orange { background: #FF6B00; color: #ffffff; }
+
+/* ── STAT BAND ── */
+.stat-band {
+    background: #111111;
+    display: flex;
+    flex-wrap: wrap;
+}
+.stat-cell {
+    flex: 1 1 200px;
+    padding: 32px 24px;
+    text-align: center;
+    border-right: 1px solid #222222;
+}
+.stat-cell:last-child { border-right: none; }
+.stat-num {
+    font-family: 'Oswald', Arial, sans-serif;
+    font-size: 52px;
+    font-weight: 700;
+    color: #FF6B00;
+    line-height: 1;
+    display: block;
+}
+.stat-desc {
+    font-size: 12px;
+    color: #aaaaaa;
+    margin-top: 6px;
+}
+
+/* ── CARDS IMPACT ── */
+.cards-section-can {
+    padding: 56px 0 48px;
+    border-bottom: 1px solid #e0e0e0;
+}
+.cards-grid-can {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1px;
+    background: #dddddd;
+    border: 1px solid #dddddd;
+}
+.card-can {
+    background: #ffffff;
+    padding: 28px 24px;
+    flex: 1 1 280px;
+}
+.card-can:hover { background: #f9f9f9; }
+.card-num-can {
+    font-family: 'Oswald', Arial, sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: #f0f0f0;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+.card-bar-can {
+    width: 36px;
+    height: 3px;
+    background: #E8230A;
+    margin-bottom: 14px;
+}
+.card-can h3 {
+    font-family: 'Oswald', Arial, sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #111111;
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+.card-can p {
+    font-size: 13.5px;
+    color: #444444;
+    line-height: 1.75;
+}
+
+/* ── QUOTE ── */
+.quote-section-can {
+    background: #111111;
+    padding: 56px 24px;
+}
+.quote-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    border-left: 5px solid #FF6B00;
+    padding-left: 32px;
+}
+.quote-text-can {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 22px;
+    font-style: italic;
+    color: #ffffff;
+    line-height: 1.55;
+    margin-bottom: 20px;
+}
+.quote-author-can {
+    font-family: 'Oswald', Arial, sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #FF6B00;
+}
+
+/* ── CONSEQUENCES ── */
+.cons-section-can {
+    padding: 56px 0 48px;
+    border-bottom: 1px solid #e0e0e0;
+}
+.cons-grid-can {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+.cons-col-can {
+    flex: 1 1 300px;
+}
+.cons-col-can h3 {
+    font-family: 'Oswald', Arial, sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #111111;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #E8230A;
+    margin-bottom: 20px;
+}
+.cons-list-can {
+    list-style: none;
+    padding: 0;
+}
+.cons-list-can li {
+    display: flex;
+    gap: 12px;
+    font-size: 14px;
+    line-height: 1.75;
+    color: #333333;
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+    border-bottom: 1px dashed #dddddd;
+}
+.cons-list-can li::before {
+    content: '▶️';
+    color: #FF6B00;
+    font-size: 10px;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+/* ── VERDICT ── */
+.verdict-section-can {
+    padding: 60px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+.verdict-headline {
+    font-family: 'Oswald', Arial, sans-serif;
+    font-size: 64px;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 0.95;
+    color: #111111;
+    margin-bottom: 28px;
+}
+.verdict-headline span { color: #E8230A; }
+.verdict-body-can {
+    max-width: 720px;
+}
+.verdict-body-can p {
+    font-size: 15.5px;
+    line-height: 1.85;
+    color: #333333;
+    margin-bottom: 16px;
+}
+.verdict-body-can strong { color: #E8230A; font-weight: 600; }
+.verdict-body-can em {
+    color: #FF6B00;
+    font-style: normal;
+    font-weight: 600;
+}
+/* ── FOOTER ARTICLE ── */
+.footer-article {
+    background: #111111;
+    padding: 28px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.footer-article .f-logo {
+    font-family: 'Oswald', Arial, sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #FF6B00;
+}
+.footer-article p {
+    font-size: 12px;
+    color: #666666;
+}
+
+/* ── RESPONSIVE ARTICLE ── */
+@media (max-width: 640px) {
+    .hero-article h1  { font-size: 42px; }
+    .section-title-can { font-size: 28px; }
+    .verdict-headline { font-size: 38px; }
+    .timeline-date    { font-size: 26px; min-width: 70px; }
+    .intro-pull       { font-size: 18px; }
+    .quote-text-can   { font-size: 18px; }
+    .stat-num         { font-size: 38px; }
+}
+
+/* ════════════════════════════════════
+   SIGNATURE ARTICLE — TOUS LES ARTICLES
+════════════════════════════════════ */
+.article-signature {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 48px;
+    margin-bottom: 32px;
+    padding: 18px 24px;
+    border-left: 4px solid #111;
+    background: #f9f9f9;
+    border-radius: 0 8px 8px 0;
+}
+.signature-logo {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #111;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+.signature-tagline {
+    font-size: 14px;
+    color: #555;
+    font-style: italic;
+    letter-spacing: 0.3px;
+}
+@media (max-width: 576px) {
+    .article-signature {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+}
