@@ -1,11 +1,77 @@
-<h2>{{ guide.title }}</h2>
-<p>{{ guide.description }}</p>
+{% extends "base.html" %}
+{% load static %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.email }}
-    <button type="submit">
-        Télécharger le guide
-    </button>
-    <p>Entrer votre adresse email </p>
-</form>
+{% block title %}{{ guide.title }} — Guide StarMediaBlog{% endblock %}
+
+{% block meta_description %}
+  Téléchargez gratuitement le guide "{{ guide.title }}" sur StarMediaBlog.
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+
+      <!-- ══ CARD CAPTURE ══ -->
+      <div class="capture-card shadow-sm rounded-3 overflow-hidden">
+
+        <!-- Header coloré -->
+        <div class="capture-header text-white text-center p-4"
+             style="background: linear-gradient(135deg, #111 0%, #333 100%);">
+          <div class="mb-3">
+            <i class="bi bi-file-earmark-arrow-down"
+               style="font-size: 3rem;"></i>
+          </div>
+          <span class="badge bg-warning text-dark mb-2">Guide Gratuit</span>
+          <h1 class="h3 fw-bold mb-0">{{ guide.title }}</h1>
+        </div>
+
+        <!-- Body -->
+        <div class="p-4 p-md-5 bg-white">
+
+          <p class="text-muted mb-4">{{ guide.description }}</p>
+
+          <hr class="mb-4">
+
+          <p class="fw-semibold mb-3">
+            📧 Entrez votre email pour recevoir le guide instantanément :
+          </p>
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="mb-3">
+              {{ form.email }}
+              {% if form.email.errors %}
+                <div class="text-danger small mt-1">
+                  {{ form.email.errors|join:", " }}
+                </div>
+              {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-dark w-100 py-2 fw-bold">
+              <i class="bi bi-download me-2"></i>
+              Télécharger le guide gratuitement
+            </button>
+
+          </form>
+
+          <p class="text-muted small text-center mt-3 mb-0">
+            🔒 Votre email est confidentiel. Aucun spam.
+          </p>
+
+        </div>
+      </div>
+      <!-- / capture-card -->
+
+      <!-- Retour -->
+      <div class="text-center mt-4">
+        <a href="{% url 'home' %}" class="text-muted small text-decoration-none">
+          ← Retour à l'accueil
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

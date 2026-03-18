@@ -1,6 +1,114 @@
-<h1>{{ author.username }}</h1>
+{% extends "base.html" %}
+{% load static %}
 
-<p>Total articles : {{ articles.count }}</p>
-<p>
-<a href="{% url 'article_detail' slug='contact' %}">Contact</a>
-</p>
+{% block title %}{{ author.username }} — Auteur StarMediaBlog{% endblock %}
+
+{% block meta_description %}
+  Retrouvez tous les articles de {{ author.username }} sur StarMediaBlog.
+{% endblock %}
+
+{% block og_title %}{{ author.username }} — StarMediaBlog{% endblock %}
+{% block og_description %}
+  {{ articles.count }} article{{ articles.count|pluralize }}
+  publié{{ articles.count|pluralize }} par {{ author.username }}.
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+
+  <!-- ══ HEADER AUTEUR ══ -->
+  <div class="d-flex align-items-center gap-4 mb-5 pb-4 border-bottom">
+
+    <!-- Avatar généré -->
+    <div class="rounded-circle bg-dark text-white d-flex align-items-center
+                justify-content-center fw-bold fs-2"
+         style="width:80px; height:80px; flex-shrink:0;">
+      {{ author.username|first|upper }}
+    </div>
+
+    <div>
+      <h1 class="fw-bold mb-1">{{ author.username }}</h1>
+      <p class="text-muted mb-2">
+        Membre depuis {{ author.date_joined|date:"F Y" }}
+      </p>
+      <span class="badge bg-dark">
+        {{ articles.count }} article{{ articles.count|pluralize }} publié{{ articles.count|pluralize }}
+      </span>
+    </div>
+
+  </div>
+
+  <!-- ══ ARTICLES DE L'AUTEUR ══ -->
+  <h2 class="h4 fw-bold mb-4">Articles publiés</h2>
+
+  {% if articles %}
+  <div class="row g-4">
+
+    {% for article in articles %}
+    <div class="col-md-4 col-sm-6">
+      <div class="card h-100 border-0 shadow-sm">
+
+        <a href="{% url 'article_detail' article.slug %}">
+          {% if article.image %}
+            <img src="{{ article.image.url }}"
+                 class="card-img-top"
+                 alt="{{ article.title }}"
+                 loading="lazy"
+                 style="height:200px; object-fit:cover;">
+          {% else %}
+            <img src="{% static 'images/logo.png' %}"
+                 class="card-img-top"
+                 loading="lazy"
+                 style="height:200px; object-fit:contain;
+                        padding:20px; background:#f8f9fa;">
+          {% endif %}
+        </a>
+
+        <div class="card-body d-flex flex-column">
+
+          <span class="badge bg-secondary mb-2"
+                style="width:fit-content;">
+            {{ article.category.name }}
+          </span>
+
+          <h5 class="card-title fw-bold">
+            <a href="{% url 'article_detail' article.slug %}"
+               class="text-decoration-none text-dark">
+              {{ article.title }}
+            </a>
+          </h5>
+
+          <p class="card-text text-muted small flex-grow-1">
+            {{ article.excerpt }}
+          </p>
+
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <small class="text-muted">
+              {{ article.created_at|date:"d/m/Y" }}
+              · 👁 {{ article.views }}
+              · ❤️ {{ article.likes.count }}
+            </small>
+            <a href="{% url 'article_detail' article.slug %}"
+               class="btn btn-sm btn-outline-dark">
+              Lire →
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+
+  {% else %}
+  <div class="text-center py-5">
+    <p class="text-muted">Cet auteur n'a pas encore publié d'article.</p>
+    <a href="{% url 'home' %}" class="btn btn-dark mt-3">
+      ← Retour à l'accueil
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

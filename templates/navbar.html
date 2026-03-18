@@ -1,143 +1,105 @@
 {% load static %}
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-info shadow-sm">
+  <div class="container">
 
-<div class="container">
-
-<a class="navbar-brand d-flex align-items-center"
-
-href="{% url 'home' %}">
-
-<img src="{% static 'images/logo.png' %}"
-
-height="55"
-
-class="me-2">
-
-<span class="fw-bold">
-
-StarMediaBlog
-
-</span>
-
-</a>
-
-<button class="navbar-toggler"
-
-type="button"
-
-data-bs-toggle="collapse"
-
-data-bs-target="#navbarNav">
-
-<span class="navbar-toggler-icon"></span>
-
-</button>
-
-<div class="collapse navbar-collapse"
-
-id="navbarNav">
-
-<ul class="navbar-nav me-auto">
-
-<li class="nav-item">
-
-<a class="nav-link"
-
-href="{% url 'home' %}">
-
-Accueil
-
-</a>
-
-</li>
-
-<li class="nav-item">
-
-<a class="nav-link"
-
-href="{% url 'category_articles' 'sport' %}">
-
-Sport
-
-</a>
-
-</li>
-
-<li class="nav-item">
-
-<a class="nav-link"
-
-href="{% url 'category_articles' 'musique' %}">
-
-Musique
-
-</a>
-
-</li>
-
-<li class="nav-item">
-
-<a class="nav-link"
-
-href="{% url 'category_articles' 'sociopolitique' %}">
-
-Sociopolitique
-
-</a>
-
-</li>
-
-<li class="nav-item">
-
-<a class="nav-link"
-
-href="{% url 'category_articles' 'divers' %}">
-
-Divers
-
-</a>
-
-</li>
-
-</ul>
-
-<ul class="navbar-nav ms-auto">
-
-{% if user.is_authenticated %}
-
-<li class="nav-item">
-    <a class="nav-link" href="{% url 'profile' %}">
-        👤 {{ user.username }}
+    <!-- LOGO -->
+    <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+      <img src="{% static 'images/logo.png' %}"
+           height="55"
+           class="me-2"
+           alt="StarMediaBlog logo"
+           loading="lazy">
+      <span class="fw-bold">StarMediaBlog</span>
     </a>
-</li>
 
-<li class="nav-item">
-    <form method="post" action="{% url 'logout' %}" class="d-inline">
-        {% csrf_token %}
-        <button type="submit" class="nav-link btn btn-link"
-                style="border:none; background:none;">
-            🚪 Logout
-        </button>
-    </form>
-</li>
+    <!-- BURGER MOBILE -->
+    <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-{% else %}
+    <div class="collapse navbar-collapse" id="navbarNav">
 
-<li class="nav-item">
-    <a class="nav-link" href="{% url 'login' %}">Login</a>
-</li>
+      <!-- LIENS GAUCHE -->
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'home' %}">Accueil</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'category_articles' 'sport' %}">Sport</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'category_articles' 'musique' %}">Musique</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'category_articles' 'sociopolitique' %}">Sociopolitique</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'category_articles' 'divers' %}">Divers</a>
+        </li>
+      </ul>
 
-<li class="nav-item">
-    <a class="nav-link" href="{% url 'register' %}">Register</a>
-</li>
+      <!-- LIENS DROITE -->
+      <ul class="navbar-nav ms-auto align-items-center">
 
-{% endif %}
+        {% if user.is_authenticated %}
 
-</ul>
+          <!-- Dashboard si staff/admin -->
+          {% if user.is_staff %}
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/">
+              ⚙️ Admin
+            </a>
+          </li>
+          {% endif %}
 
-</div>
+          <!-- Dashboard utilisateur -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard' %}">
+              📊 Dashboard
+            </a>
+          </li>
 
-</div>
+          <!-- Profil auteur -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'author_profile' user.username %}">
+              👤 {{ user.username }}
+            </a>
+          </li>
 
+          <!-- Logout -->
+          <li class="nav-item">
+            <form method="post" action="{% url 'logout' %}" class="d-inline m-0">
+              {% csrf_token %}
+              <button type="submit"
+                      class="nav-link btn btn-link p-0 text-white"
+                      style="border:none; background:none;">
+                🚪 Logout
+              </button>
+            </form>
+          </li>
+
+        {% else %}
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-outline-light btn-sm px-3 ms-2"
+               href="{% url 'register' %}">
+              Register
+            </a>
+          </li>
+
+        {% endif %}
+
+      </ul>
+    </div>
+  </div>
 </nav>

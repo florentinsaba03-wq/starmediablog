@@ -1,13 +1,30 @@
-<h1>{{ category.name }}</h1>
+{% extends "base.html" %}
+{% load static %}
 
-{% for article in articles %}
+{% block title %}{{ category.name }} — StarMediaBlog{% endblock %}
 
-<h2>{{ article.title }}</h2>
+{% block content %}
+<div class="container mt-5 mb-5">
 
-<a href="{% url 'article_detail' article.slug %}">
-Lire
-</a>
+  <h1 class="fw-bold mb-4">{{ category.name }}</h1>
 
-{% endfor %}
+  {% for article in articles %}
+  <div class="border-bottom pb-3 mb-3">
+    <h2 class="h5 fw-bold">
+      <a href="{% url 'article_detail' article.slug %}"
+         class="text-decoration-none text-dark">
+        {{ article.title }}
+      </a>
+    </h2>
+    <p class="text-muted small">{{ article.excerpt }}</p>
+    <a href="{% url 'article_detail' article.slug %}"
+       class="btn btn-sm btn-outline-dark">
+      Lire l'article →
+    </a>
+  </div>
+  {% empty %}
+  <p class="text-muted">Aucun article dans cette catégorie.</p>
+  {% endfor %}
 
-{% include "footer.html" %}
+</div>
+{% endblock %}

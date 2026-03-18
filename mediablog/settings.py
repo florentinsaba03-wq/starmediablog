@@ -63,30 +63,32 @@ CKEDITOR_5_CONFIGS = {
         'toolbar': [
             'sourceEditing',
             '|',
-            'heading',
-            '|',
-            'bold', 'italic', 'underline', 'strikethrough',
-            '|',
-            'link',
-            'insertImage',
-            'bulletedList',
-            'numberedList',
-            '|',
-            'blockQuote',
-            'insertTable',
-            'imageUpload',
-            '|',
-            'undo',
-            'redo',
-            '|',
-            'alignment',
-            'fontSize',
-            'fontColor',
-            'fontBackgroundColor',
-            '|',
-            'codeBlock',
-            'htmlEmbed'
+            'heading', '|',
+            'bold', 'italic', 'underline', 'strikethrough', '|',
+            'link', 'insertImage',
+            'bulletedList', 'numberedList', '|',
+            'blockQuote', 'insertTable', 'imageUpload', '|',
+            'undo', 'redo', '|',
+            'alignment', 'fontSize', 'fontColor', 'fontBackgroundColor', '|',
+            'codeBlock', 'htmlEmbed'
         ],
+
+        # ✅ AJOUTE CE BLOC — autorise tout HTML/CSS
+        'htmlSupport': {
+            'allow': [
+                {
+                    'name': '/.+/',
+                    'attributes': True,
+                    'classes': True,
+                    'styles': True
+                }
+            ]
+        },
+
+        # ✅ AJOUTE CE BLOC — autorise les balises <style> inline
+        'htmlEmbed': {
+            'showPreviews': True,
+        },
 
         'image': {
             'toolbar': [
@@ -96,15 +98,11 @@ CKEDITOR_5_CONFIGS = {
                 'imageStyle:side',
             ]
         },
-
         'table': {
             'contentToolbar': [
-                'tableColumn',
-                'tableRow',
-                'mergeTableCells'
+                'tableColumn', 'tableRow', 'mergeTableCells'
             ]
         },
-
         'heading': {
             'options': [
                 {'model': 'paragraph', 'title': 'Paragraphe'},

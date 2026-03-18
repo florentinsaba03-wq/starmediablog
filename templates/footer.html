@@ -1,86 +1,100 @@
+{% load static %}
+
 <footer class="footer mt-5">
+  <div class="container">
 
+    <!-- ══ 3 COLONNES CORRECTES (3+3+3+3 = 12) ══ -->
+    <div class="row gy-4">
 
-<div class="container">
+      <!-- COL 1 — Logo + description -->
+      <div class="col-md-3 col-sm-6">
+        <h4 class="footer-logo">StarMediaBlog</h4>
+        <p class="footer-desc">
+          Votre source fiable d'actualités sportives, musicales,
+          sociopolitiques et divers.
+        </p>
+        <!-- Réseaux sociaux sous le logo -->
+        <div class="social-icons mt-3">
+          <a href="https://www.facebook.com/profile.php?id=61588267723506"
+             target="_blank" rel="noopener" aria-label="Facebook">
+            <i class="bi bi-facebook"></i>
+          </a>
+          <a href="https://x.com/StarMediaBlog1"
+             target="_blank" rel="noopener" aria-label="Twitter/X">
+            <i class="bi bi-twitter-x"></i>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <i class="bi bi-instagram"></i>
+          </a>
+          <a href="https://youtube.com/@starmediablog?si=CIwjGHp6WzDw9jMV"
+             target="_blank" rel="noopener" aria-label="YouTube">
+            <i class="bi bi-youtube"></i>
+          </a>
+          <a href="https://www.tiktok.com/@starmedia_research?lang=fr"
+             target="_blank" rel="noopener" aria-label="TikTok">
+            <i class="bi bi-tiktok"></i>
+          </a>
+        </div>
+      </div>
 
-<div class="row gy-4">
+      <!-- COL 2 — Navigation catégories -->
+      <div class="col-md-3 col-sm-6">
+        <h6 class="footer-title">Navigation</h6>
+        <ul class="footer-links">
+          <li><a href="{% url 'home' %}">Accueil</a></li>
+          <li><a href="{% url 'category_articles' 'sport' %}">Sport</a></li>
+          <li><a href="{% url 'category_articles' 'musique' %}">Musique</a></li>
+          <li><a href="{% url 'category_articles' 'sociopolitique' %}">Sociopolitique</a></li>
+          <li><a href="{% url 'category_articles' 'divers' %}">Divers</a></li>
+        </ul>
+      </div>
 
-<!-- Logo -->
-<div class="col-md-4">
+      <!-- COL 3 — Pages légales -->
+      <!-- ✅ Utilise des URLs sécurisées avec |default pour éviter les 500 -->
+      <div class="col-md-3 col-sm-6">
+        <h5 class="footer-title">Pages Légales</h5>
+        <ul class="footer-links">
+          <li>
+            <a href="/article/a-propos/">À propos</a>
+          </li>
+          <li>
+            <a href="/article/contact/">Contact</a>
+          </li>
+          <li>
+            <a href="/article/mentions-legales/">Mentions légales</a>
+          </li>
+          <li>
+            <a href="/article/politique-de-confidentialite/">
+              Politique de confidentialité
+            </a>
+          </li>
+          <li>
+            <a href="/article/conditions-utilisation/">
+              Conditions d'utilisation
+            </a>
+          </li>
+        </ul>
+      </div>
 
-<h4 class="footer-logo">StarMediaBlog</h4>
+      <!-- COL 4 — Contact / Newsletter -->
+      <div class="col-md-3 col-sm-6">
+        <h6 class="footer-title">Contact</h6>
+        <p class="footer-desc">
+          Une question, un partenariat ?
+        </p>
+        <a href="/article/contact/"
+           class="btn btn-outline-light btn-sm mt-2">
+          Nous contacter
+        </a>
+      </div>
 
-<p class="footer-desc">
-Votre source fiable d'actualités sportives, musicales, sociopolitiques et divers.
-</p>
+    </div>
 
-</div>
-<!-- Pages Légales -->
-<div class="col-md-4">
+    <hr class="footer-line mt-4">
 
-<h5 class="footer-title">Pages Légales</h5>
-<ul class="footer-links">
- <li><a href="{% url 'article_detail' slug='a-propos' %}">À propos</a></li>
- <li><a href="{% url 'article_detail' slug='contact' %}">Contact</a></li>
- <li><a href="{% url 'article_detail' slug='mentions-legale' %}">Mentions légales</a></li>
- <li><a href="{% url 'article_detail' slug='politique-de-confidentialite' %}">Politique de confidentialité</a></li>
- <li><a href="{% url 'article_detail' slug='conditions-utilisation' %}">Conditions d'utilisation</a></li>
-</ul>
+    <div class="text-center footer-copy pb-3">
+      © {% now "Y" %} StarMediaBlog — Tous droits réservés
+    </div>
 
-</div>
-
-
-<!-- Navigation -->
-<div class="col-md-4">
-
-<h6 class="footer-title">Navigation</h6>
-
-<ul class="footer-links">
-
-<li><a href="{% url 'category_articles' 'sport' %}">Sport</a></li>
-
-<li><a href="{% url 'category_articles' 'musique' %}">Musique</a></li>
-
-<li><a href="{% url 'category_articles' 'sociopolitique' %}">Sociopolitique</a></li>
-
-<li><a href="{% url 'category_articles' 'divers' %}">Divers</a></li>
-</ul>
-
-
-</div>
-
-<!-- Réseaux sociaux -->
-<div class="col-md-4">
-
-<h6 class="footer-title">Suivez-nous</h6>
-
-<div class="social-icons">
-
-<a href="https://www.facebook.com/profile.php?id=61588267723506"><i class="bi bi-facebook"></i></a>
-
-<a href="https://x.com/StarMediaBlog1"><i class="bi bi-twitter-x"></i></a>
-
-<a href="#"><i class="bi bi-instagram"></i></a>
-
-<a href="https://youtube.com/@starmediablog?si=CIwjGHp6WzDw9jMV"><i class="bi bi-youtube"></i></a>
-
-<a href="https://www.tiktok.com/@starmedia_research?lang=fr"><i class="bi bi-tiktok"></i></a>
-
-
-</div>
-
-</div>
-
-</div>
-
-<hr class="footer-line">
-
-<div class="text-center footer-copy">
-
-© {% now "Y" %} StarMediaBlog — Tous droits réservés
-
-</div>
-
-</div>
-
+  </div>
 </footer>

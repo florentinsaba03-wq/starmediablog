@@ -146,7 +146,7 @@ def author_profile(request, username):
     articles = Article.objects.filter(
         author=author,
         status="published"
-    )
+    ).order_by('-created_at')
 
     return render(request, "author_profile.html", {
         "author": author,

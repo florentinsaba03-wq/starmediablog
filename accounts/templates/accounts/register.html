@@ -1,21 +1,57 @@
-{% include "navbar.html" %}
+{% extends "base.html" %}
+{% load static %}
 
-<div class="container mt-5">
+{% block title %}Inscription — StarMediaBlog{% endblock %}
 
-<h2>Créer un compte</h2>
+{% block content %}
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
 
-<form method="POST">
+      <div class="text-center mb-4">
+        <img src="{% static 'images/logo.png' %}"
+             height="55" alt="StarMediaBlog" loading="lazy">
+        <h1 class="h4 fw-bold mt-3">Créer un compte</h1>
+        <p class="text-muted small">Rejoignez la communauté StarMediaBlog</p>
+      </div>
 
-{% csrf_token %}
+      <div class="card border-0 shadow-sm p-4">
+        <form method="post" novalidate>
+          {% csrf_token %}
 
-{{ form.as_p }}
+          {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">
+              {{ field.label }}
+            </label>
+            {{ field }}
+            {% if field.errors %}
+              <div class="text-danger small mt-1">
+                {{ field.errors|join:", " }}
+              </div>
+            {% endif %}
+            {% if field.help_text %}
+              <div class="text-muted small mt-1">
+                {{ field.help_text }}
+              </div>
+            {% endif %}
+          </div>
+          {% endfor %}
 
-<button class="btn btn-primary">
+          <button type="submit" class="btn btn-dark w-100 py-2 fw-bold mt-2">
+            Créer mon compte
+          </button>
+        </form>
+      </div>
 
-Register
+      <p class="text-center text-muted small mt-4">
+        Déjà un compte ?
+        <a href="{% url 'login' %}" class="text-dark fw-semibold">
+          Se connecter
+        </a>
+      </p>
 
-</button>
-
-</form>
-
+    </div>
+  </div>
 </div>
+{% endblock %}

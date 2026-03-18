@@ -1,43 +1,122 @@
-{% include "navbar.html" %}
+{% extends "base.html" %}
+{% load static %}
 
-<div class="container mt-5">
+{% block title %}Mon Profil — StarMediaBlog{% endblock %}
 
-<h2>
+{% block content %}
+<div class="container mt-5 mb-5">
 
-{{ profile_user.username }}
+  <!-- ══ HEADER PROFIL ══ -->
+  <div class="d-flex align-items-center gap-4 mb-5 pb-4 border-bottom">
+    <div class="author-avatar">
+      {{ request.user.username|first|upper }}
+    </div>
+    <div>
+      <h1 class="fw-bold mb-1">{{ request.user.username }}</h1>
+      <p class="text-muted mb-2">
+        Membre depuis {{ request.user.date_joined|date:"F Y" }}
+      </p>
+      <div class="d-flex gap-2 flex-wrap">
+        <span class="badge bg-dark">
+          {{ articles.count }} article{{ articles.count|pluralize }}
+        </span>
+        {% if request.user.is_staff %}
+          <span class="badge bg-warning text-dark">Admin</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 
-</h2>
+  <!-- ══ LIENS RAPIDES ══ -->
+  <div class="d-flex gap-2 mb-5 flex-wrap">
+    <a href="{% url 'dashboard' %}" class="btn btn-dark btn-sm">
+      📊 Dashboard
+    </a>
+    {% if request.user.is_staff %}
+    <a href="/admin/" class="btn btn-outline-dark btn-sm">
+      ⚙️ Admin Django
+    </a>
+    {% endif %}
+    <a href="{% url 'author_profile' request.user.username %}"
+       class="btn btn-outline-dark btn-sm">
+      👁 Voir mon profil public
+    </a>
+  </div>
 
-<hr>
+  <!-- ══ MES DERNIERS ARTICLES ══ -->
+  <h2 class="h4 fw-bold mb-4">Mes articles récents</h2>
 
-{% for article in articles %}
+  {% if articles %}
+  <div class="row g-4">
+    {% for article in articles|slice:":6" %}
+    <div class="col-md-4 col-sm-6">
+      <div class="card h-100 border-0 shadow-sm">
 
-<div class="mb-4">
+        <a href="{{ article.get_absolute_url }}">
+          {% if article.image %}
+            <img src="{{ article.image.url }}"
+                 class="card-img-top"
+                 style="height:180px; object-fit:cover;"
+                 loading="lazy"
+                 alt="{{ article.title }}">
+          {% else %}
+            <img src="{% static 'images/logo.png' %}"
+                 class="card-img-top"
+                 style="height:180px; object-fit:contain; padding:20px; background:#f8f9fa;"
+                 loading="lazy">
+          {% endif %}
+        </a>
 
-<a href="{% url 'article_detail' article.slug %}">
+        <div class="card-body d-flex flex-column">
 
-<h4>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="badge bg-secondary">{{ article.category.name }}</span>
+            {% if article.status == 'published' %}
+              <span class="badge bg-success">Publié</span>
+            {% else %}
+              <span class="badge bg-secondary">Brouillon</span>
+            {% endif %}
+          </div>
 
-{{ article.title }}
+          <h6 class="fw-bold">
+            <a href="{{ article.get_absolute_url }}"
+               class="text-decoration-none text-dark">
+              {{ article.title }}
+            </a>
+          </h6>
 
-</h4>
+          <div class="mt-auto pt-2 d-flex justify-content-between align-items-center">
+            <small class="text-muted">
+              👁 {{ article.views }} · ❤️ {{ article.likes.count }}
+            </small>
+            <a href="/admin/articles/article/{{ article.id }}/change/"
+               class="btn btn-sm btn-outline-secondary">
+              ✏️ Éditer
+            </a>
+          </div>
 
-</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
 
-<p>
+  {% if articles.count > 6 %}
+  <div class="text-center mt-4">
+    <a href="{% url 'dashboard' %}" class="btn btn-dark">
+      Voir tous mes articles ({{ articles.count }})
+    </a>
+  </div>
+  {% endif %}
 
-{{ article.views }} vues
-
-•
-
-❤️ <span
-
-id="like-count">{{ article.total_likes }} likes</span>
-
-</p>
+  {% else %}
+  <div class="text-center py-5">
+    <p class="text-muted">Vous n'avez pas encore publié d'article.</p>
+    <a href="/admin/articles/article/add/" class="btn btn-dark mt-3">
+      Créer mon premier article
+    </a>
+  </div>
+  {% endif %}
 
 </div>
-
-{% endfor %}
-
-</div>
+{% endblock %}

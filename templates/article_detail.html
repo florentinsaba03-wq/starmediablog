@@ -1,119 +1,123 @@
+{% extends "base.html" %}
 {% load static %}
-<p>
 
-Auteur :
+{% block title %}{{ article.title }} — StarMediaBlog{% endblock %}
 
-<a href="{% url 'author_profile' article.author.username %}">
-{{ article.author.username }}
-</a>
+{% block meta_description %}{{ article.title }} — StarMediaBlog{% endblock %}
 
-</p>
-<h1>{{ article.title }}</h1>
-{% if user.is_authenticated %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ article.title }}{% endblock %}
+{% block og_description %}{{ article.title }} — StarMediaBlog{% endblock %}
+{% block og_image %}
+  {% if article.image %}{{ article.image.url }}{% else %}{% static 'images/logo.png' %}{% endif %}
+{% endblock %}
+{% block twitter_title %}{{ article.title }}{% endblock %}
+{% block twitter_image %}
+  {% if article.image %}{{ article.image.url }}{% else %}{% static 'images/logo.png' %}{% endif %}
+{% endblock %}
 
-<button
-    id="like-btn"
-    data-slug="{{ article.slug }}"
-    class="btn btn-outline-danger">
+{% block content %}
+<div class="container my-5">
 
-    ❤️ <span id="like-count">{{ article.likes.count }}</span>
+  <div class="d-flex align-items-center gap-2 mb-2 text-muted small">
+    <span>Par</span>
+    <a href="{% url 'author_profile' article.author.username %}" class="fw-semibold text-decoration-none">
+      {{ article.author.username }}
+    </a>
+    <span>·</span>
+    <span>{{ article.created_at|date:"d F Y" }}</span>
+    <span>·</span>
+    <span>{{ article.views }} vue{{ article.views|pluralize }}</span>
+  </div>
 
-</button>
+  <h1 class="fw-bold mb-4">{{ article.title }}</h1>
 
-{% else %}
+  {% if article.image %}
+    <img src="{{ article.image.url }}"
+         alt="StarMediaBlog - {{ article.title }}"
+         class="img-fluid rounded mb-4"
+         style="width:100%; height:420px; object-fit:cover;"
+         loading="lazy">
+  {% endif %}
 
-<p>
-    <a href="/accounts/login/">Connectez-vous pour liker</a>
-</p>
+  {% if article.video %}
+    <div class="mb-4">
+      <video width="100%" height="400" controls class="rounded">
+        <source src="{{ article.video.url }}" type="video/mp4">
+      </video>
+    </div>
+  {% endif %}
 
-{% endif %}
+  {% if article.youtube_id %}
+    <div class="ratio ratio-16x9 mb-4">
+      <iframe src="https://www.youtube.com/embed/{{ article.youtube_id }}"
+              frameborder="0" allowfullscreen></iframe>
+    </div>
+  {% endif %}
 
-{% if article.image %}
-<img src="{{ article.image.url }}"
-     alt="StarMediaBlog - {{ article.title }}"
-     class="img-fluid"
-     loading="lazy"
-     style="width:90%; height:400px; object-fit:cover;">
-{% else %}
-<img src="{% static 'images/logo.png' %}"
-     class="img-fluid"
-     style="height:50px;"
-     loading="lazy">
-{% endif %}
+  <!-- ✅ DIV propre — jamais de <p> autour du contenu CKEditor -->
+  <div class="article-body mb-5">
+    {{ article.content|safe }}
+  </div>
 
-{% if article.video %}
-<video width="90%" height="400" controls>
-    <source src="{{ article.video.url }}" type="video/mp4">
-</video>
-{% endif %}
+  <div class="mb-5">
+    {% if user.is_authenticated %}
+      <button id="like-btn" data-slug="{{ article.slug }}" class="btn btn-outline-danger">
+        ❤️ <span id="like-count">{{ article.likes.count }}</span> J'aime
+      </button>
+    {% else %}
+      <a href="/accounts/login/" class="btn btn-outline-secondary">
+        Connectez-vous pour liker
+      </a>
+    {% endif %}
+  </div>
 
+  <hr>
+  <h4 class="mb-4">Commentaires</h4>
 
-{% if article.youtube_id %}
-<div class="ratio ratio-16x9">
-    <iframe
-        src="https://www.youtube.com/embed/{{ article.youtube_id }}"
-        frameborder="0"
-        allowfullscreen>
-    </iframe>
-</div>
-{% endif %}
-<p>{{ article.content |safe }}</p>
-
-<hr>
-
-<h4>Commentaires</h4>
-
-{% for comment in comments %}
-<div class="mb-3">
+  {% for comment in comments %}
+  <div class="mb-3 p-3 border rounded">
     <strong>{{ comment.name }}</strong>
-    <small>{{ comment.created_at }}</small>
-    <p>{{ comment.content }}</p>
-</div>
-{% empty %}
-<p>Aucun commentaire. Soyez le premier.</p>
-{% endfor %}
+    <small class="text-muted ms-2">{{ comment.created_at|date:"d F Y à H:i" }}</small>
+    <p class="mt-2 mb-0">{{ comment.content }}</p>
+  </div>
+  {% empty %}
+  <p class="text-muted">Aucun commentaire. Soyez le premier.</p>
+  {% endfor %}
 
-<hr>
+  <hr>
+  <h4 class="mb-4">Laisser un commentaire</h4>
 
-<h4>Laisser un commentaire</h4>
-
-<form method="POST">
+  <form method="POST" class="mb-5">
     {% csrf_token %}
+    <div class="mb-3">{{ form.name }}</div>
+    <div class="mb-3">{{ form.email }}</div>
+    <div class="mb-3">{{ form.content }}</div>
+    <button type="submit" class="btn btn-primary">Publier le commentaire</button>
+  </form>
 
-    <div class="mb-3">
-        {{ form.name }}
-    </div>
+</div>
+{% endblock %}
 
-    <div class="mb-3">
-        {{ form.email }}
-    </div>
-
-    <div class="mb-3">
-        {{ form.content }}
-    </div>
-
-    <button class="btn btn-primary">
-        Publier le commentaire
-    </button>
-
-</form>
+{% block extra_js %}
+{% if user.is_authenticated %}
 <script>
-
-document.getElementById("like-btn").onclick = function() {
-
-    const slug = this.dataset.slug;
-
-    fetch(/like/${slug}/)
-    .then(response => response.json())
-    .then(data => {
-
+  const likeBtn = document.getElementById("like-btn");
+  if (likeBtn) {
+    likeBtn.addEventListener("click", function () {
+      const slug = this.dataset.slug;
+      fetch(`/like/${slug}/`, {
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+      })
+      .then(r => r.json())
+      .then(data => {
         document.getElementById("like-count").innerText = data.likes;
-
+        likeBtn.classList.toggle("btn-danger", data.liked);
+        likeBtn.classList.toggle("btn-outline-danger", !data.liked);
+      })
+      .catch(err => console.error("Erreur like :", err));
     });
-
-}
-
+  }
 </script>
-
-
-{% include "footer.html" %}
+{% endif %}
+{% endblock %}

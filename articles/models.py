@@ -188,3 +188,12 @@ def ping_bing(sender, instance, created, **kwargs):
             requests.get(ping_url)
         except:
             pass
+
+
+
+from django.utils.html import strip_tags
+
+@property
+def excerpt(self):
+    """Retourne les 180 premiers caractères du contenu, sans HTML."""
+    return strip_tags(self.content)[:180] + "..." if self.content else ""

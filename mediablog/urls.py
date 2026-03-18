@@ -17,39 +17,51 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.sitemaps.views import sitemap
-from articles.sitemaps import ArticleSitemap
-from articles.sitemaps import ArticleSitemap, CategorySitemap, StaticSitemap
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
 
-
-
-
-
+from articles.sitemaps import ArticleSitemap, CategorySitemap, StaticSitemap
 
 sitemaps = {
-    'articles': ArticleSitemap,
-    'categories': CategorySitemap,   # ← Nouveau
-    'static': StaticSitemap,         # ← Nouveau
+    'articles':   ArticleSitemap,
+    'categories': CategorySitemap,
+    'static':     StaticSitemap,
 }
 
-
-
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('articles.urls')),
-    path("accounts/", include("accounts.urls")),
 
+    # ══ ADMIN ══
+    path('admin/', admin.site.urls),
+
+    # ══ APPS ══
+    path('', include('articles.urls')),
+    path('accounts/', include('accounts.urls')),
+
+    # ══ CKEDITOR 5 ══
     path('django_ckeditor_5/', include('django_ckeditor_5.urls')),
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
+
+    # ══ SEO ══
     path(
-    "robots.txt",
-    TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
-),
+        'sitemap.xml',
+        sitemap,
+        {'sitemaps': sitemaps},
+        name='sitemap'
+    ),
+    path(
+        'robots.txt',
+        TemplateView.as_view(
+            template_name='robots.txt',
+            content_type='text/plain'
+        ),
+        name='robots'
+    ),
 
 ]
 
-
+# Media files en développement uniquement
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- TITRE dynamique par page -->
+  <title>{% block title %}StarMediaBlog — Actualités Sport, Musique, Sociopolitique{% endblock %}</title>
+
+  <!-- SEO de base -->
+  <meta name="description" content="{% block meta_description %}StarMediaBlog — Actualités Sport, Musique et Sociopolitique{% endblock %}">
+  <meta name="keywords"    content="{% block meta_keywords %}actualité, musique, sport, politique, Afrique{% endblock %}">
+  <meta name="author"      content="StarMediaBlog">
+  <meta name="robots"      content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="StarMediaBlog">
+  <meta property="og:type"      content="{% block og_type %}website{% endblock %}">
+  <meta property="og:title"     content="{% block og_title %}StarMediaBlog{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Actualités Sport, Musique et Sociopolitique{% endblock %}">
+  <meta property="og:image"     content="{% block og_image %}{% static 'images/logo.png' %}{% endblock %}">
+  <meta property="og:url"       content="{{ request.build_absolute_uri }}">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="{% block twitter_title %}StarMediaBlog{% endblock %}">
+  <meta name="twitter:description" content="{% block twitter_description %}Actualités Sport, Musique et Sociopolitique{% endblock %}">
+  <meta name="twitter:image"       content="{% block twitter_image %}{% static 'images/logo.png' %}{% endblock %}">
+
+  <!-- Bootstrap + Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- CSS global -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <!-- CSS spécifique à la page courante -->
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+  {% include "navbar.html" %}
+
+  <!-- CONTENU DE LA PAGE -->
+  {% block content %}{% endblock %}
+
+  {% include "footer.html" %}
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Lazy loading images global -->
+  <script>
+    document.querySelectorAll("img").forEach(img => {
+      img.setAttribute("loading", "lazy");
+    });
+  </script>
+
+  <!-- JS spécifique à la page courante -->
+  {% block extra_js %}{% endblock %}
+
+</body>
+</html>
