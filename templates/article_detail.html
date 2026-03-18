@@ -60,6 +60,14 @@
     {{ article.content|safe }}
   </div>
 
+    <!-- ══ SIGNATURE BLOG ══ -->
+  <div class="article-signature">
+    <span class="signature-logo">StarMediaBlog</span>
+    <span class="signature-tagline">
+      L'actualité sans filtre — La vérité sans compromis
+    </span>
+  </div>
+
   <div class="mb-5">
     {% if user.is_authenticated %}
       <button id="like-btn" data-slug="{{ article.slug }}" class="btn btn-outline-danger">
