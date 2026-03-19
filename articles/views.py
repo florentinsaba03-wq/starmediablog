@@ -9,16 +9,29 @@ from django.db.models import F
 from django.db import IntegrityError
 
 
+PAGES_LEGALES = [
+    'a-propos',
+    'contact',
+    'mentions-legales',
+    'politique-de-confidentialite',
+    'conditions-utilisation',
+]
+
+
 def home(request):
 
     hero = Article.objects.filter(
         status='published'
+    ).exclude(
+        slug__in=PAGES_LEGALES
     ).order_by('-created_at').first()
 
     secondary = Article.objects.filter(
         status='published'
     ).exclude(
         pk=hero.pk if hero else None
+    ).exclude(
+        slug__in=PAGES_LEGALES
     ).order_by('-created_at')[:4]
 
     already_shown = list(
@@ -30,22 +43,38 @@ def home(request):
     sport_articles = Article.objects.filter(
         status='published',
         category__slug='sport'
-    ).exclude(pk__in=already_shown).order_by('-created_at')[:4]
+    ).exclude(
+        pk__in=already_shown
+    ).exclude(
+        slug__in=PAGES_LEGALES
+    ).order_by('-created_at')[:4]
 
     musique_articles = Article.objects.filter(
         status='published',
         category__slug='musique'
-    ).exclude(pk__in=already_shown).order_by('-created_at')[:4]
+    ).exclude(
+        pk__in=already_shown
+    ).exclude(
+        slug__in=PAGES_LEGALES
+    ).order_by('-created_at')[:4]
 
     sociopolitique_articles = Article.objects.filter(
         status='published',
         category__slug='sociopolitique'
-    ).exclude(pk__in=already_shown).order_by('-created_at')[:4]
+    ).exclude(
+        pk__in=already_shown
+    ).exclude(
+        slug__in=PAGES_LEGALES
+    ).order_by('-created_at')[:4]
 
     divers_articles = Article.objects.filter(
         status='published',
         category__slug='divers'
-    ).exclude(pk__in=already_shown).order_by('-created_at')[:4]
+    ).exclude(
+        pk__in=already_shown
+    ).exclude(
+        slug__in=PAGES_LEGALES
+    ).order_by('-created_at')[:4]
 
     all_section_ids = already_shown + list(
         sport_articles.values_list('pk', flat=True)
@@ -61,11 +90,15 @@ def home(request):
         status='published'
     ).exclude(
         pk__in=all_section_ids
+    ).exclude(
+        slug__in=PAGES_LEGALES
     ).order_by('-views')[:5]
 
     if a_la_une.count() < 3:
         a_la_une = Article.objects.filter(
             status='published'
+        ).exclude(
+            slug__in=PAGES_LEGALES
         ).order_by('-views')[:5]
 
     categories = Category.objects.all()
@@ -98,21 +131,28 @@ def article_detail(request, slug):
     similaires = Article.objects.filter(
         status='published',
         category=article.category
-    ).exclude(pk=article.pk).order_by('-created_at')[:3]
+    ).exclude(
+        pk=article.pk
+    ).exclude(
+        slug__in=PAGES_LEGALES
+    ).order_by('-created_at')[:3]
 
     suivant = Article.objects.filter(
         created_at__gt=article.created_at,
         status='published'
+    ).exclude(
+        slug__in=PAGES_LEGALES
     ).order_by('created_at').first()
 
     precedent = Article.objects.filter(
         created_at__lt=article.created_at,
         status='published'
+    ).exclude(
+        slug__in=PAGES_LEGALES
     ).order_by('-created_at').first()
 
     mots = len(article.content.split())
     temps_lecture = max(1, mots // 200)
-
     comments = article.comments.filter(
         active=True
     ).order_by('-created_at')
@@ -146,6 +186,8 @@ def category_articles(request, slug):
     articles_list = Article.objects.filter(
         category=category,
         status='published'
+    ).exclude(
+        slug__in=PAGES_LEGALES
     ).order_by('-created_at')
 
     paginator = Paginator(articles_list, 6)
@@ -226,6 +268,8 @@ def author_profile(request, username):
     articles = Article.objects.filter(
         author=author,
         status="published"
+    ).exclude(
+        slug__in=PAGES_LEGALES
     ).order_by('-created_at')
 
     return render(request, "author_profile.html", {
