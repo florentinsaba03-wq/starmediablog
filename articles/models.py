@@ -197,3 +197,22 @@ from django.utils.html import strip_tags
 def excerpt(self):
     """Retourne les 180 premiers caractères du contenu, sans HTML."""
     return strip_tags(self.content)[:180] + "..." if self.content else ""
+
+class NewsletterSubscriber(models.Model):
+    email = models.EmailField(unique=True)
+    name = models.CharField(
+        max_length=100,
+        blank=True
+    )
+    subscribed_at = models.DateTimeField(
+        auto_now_add=True
+    )
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.email
+
+    class Meta:
+        verbose_name = 'Abonné Newsletter'
+        verbose_name_plural = 'Abonnés Newsletter'
+        ordering = ['-subscribed_at']

@@ -22,5 +22,6 @@ urlpatterns = [
     path('newsletter/subscribe/',
      views.newsletter_subscribe,
      name='newsletter_subscribe'),
+    path('recherche/', views.search, name='search'),
 
 ]

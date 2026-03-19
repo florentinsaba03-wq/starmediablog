@@ -11,3 +11,11 @@ admin.site.register(Subscriber)
 @admin.register(Guide)
 class GuideAdmin(admin.ModelAdmin):
     list_display = ('title', 'downloads_count')
+@admin.register(NewsletterSubscriber)
+class NewsletterSubscriberAdmin(admin.ModelAdmin):
+    list_display = [
+        'email', 'name',
+        'subscribed_at', 'is_active'
+    ]
+    list_filter = ['is_active']
+    search_fields = ['email', 'name']

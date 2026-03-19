@@ -202,6 +202,7 @@ def category_articles(request, slug):
     return render(request, 'category_articles.html', context)
 
 
+
 def newsletter_subscribe(request):
     if request.method == "POST":
         email = request.POST.get("email", "").strip()
@@ -214,8 +215,8 @@ def newsletter_subscribe(request):
             })
 
         try:
-            from .models import Subscriber
-            subscriber, created = Subscriber.objects.get_or_create(
+            from .models import NewsletterSubscriber
+            subscriber, created = NewsletterSubscriber.objects.get_or_create(
                 email=email,
                 defaults={"name": name}
             )
@@ -227,19 +228,18 @@ def newsletter_subscribe(request):
             else:
                 return JsonResponse({
                     "success": False,
-                    "message": "Cet email est déjà inscrit. ✅"
+                    "message": "Cet email est déjà inscrit ✅"
                 })
-        except Exception:
+        except Exception as e:
             return JsonResponse({
                 "success": False,
-                "message": "Erreur lors de l'inscription."
+                "message": f"Erreur : {str(e)}"
             })
 
     return JsonResponse({
         "success": False,
         "message": "Méthode non autorisée."
     })
-
 
 @login_required
 def like_article(request, slug):
@@ -334,3 +334,30 @@ def google_verification(request):
     return HttpResponse(
         "google-site-verification: google5800450418fec533.html"
     )
+
+def search(request):
+    query = request.GET.get('q', '')
+
+    articles = Article.objects.filter(
+        Q(title__icontains=query) |
+        Q(content__icontains=query),
+        status='published'
+    ).exclude(
+        slug__in=PAGES_LEGALES
+    ).order_by('-created_at') if query else Article.objects.none()
+
+    # Si aucun résultat → suggère
+    # les articles les plus populaires
+    suggestions = Article.objects.none()
+    if query and not articles.exists():
+        suggestions = Article.objects.filter(
+            status='published'
+        ).exclude(
+            slug__in=PAGES_LEGALES
+        ).order_by('-views')[:3]
+
+    return render(request, 'search.html', {
+        'articles': articles,
+        'query': query,
+        'suggestions': suggestions,
+    })
