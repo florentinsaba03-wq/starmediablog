@@ -1,109 +1,233 @@
-{% extends "base.html" %}
-{% load static %}
+me/share/url?url=https://starmediablog.onrender.com/article/{{ article.slug }}/&text={{ article.title|urlencode }}"
+             target="_blank"
+             class="btn btn-sm fw-bold text-white"
+             style="background:#0088cc;">
+            ✈️ Telegram
+          </a>
 
-{% block title %}{{ article.title }} — StarMediaBlog{% endblock %}
+        </div>
+      </div>
 
-{% block meta_description %}{{ article.title }} — StarMediaBlog{% endblock %}
+      <div class="mb-4">
+        {% if user.is_authenticated %}
+          <button id="like-btn"
+                  data-slug="{{ article.slug }}"
+                  class="btn btn-outline-danger">
+            ❤️ <span id="like-count">{{ article.likes.count }}</span> J'aime
+          </button>
+        {% else %}
+          <a href="/accounts/login/" class="btn btn-outline-secondary">
+            Connectez-vous pour liker
+          </a>
+        {% endif %}
+      </div>
 
-{% block og_type %}article{% endblock %}
-{% block og_title %}{{ article.title }}{% endblock %}
-{% block og_description %}{{ article.title }} — StarMediaBlog{% endblock %}
-{% block og_image %}
-  {% if article.image %}{{ article.image.url }}{% else %}{% static 'images/logo.png' %}{% endif %}
-{% endblock %}
-{% block twitter_title %}{{ article.title }}{% endblock %}
-{% block twitter_image %}
-  {% if article.image %}{{ article.image.url }}{% else %}{% static 'images/logo.png' %}{% endif %}
-{% endblock %}
+      <hr>
 
-{% block content %}
-<div class="container my-5">
+      <h4 class="mb-4">
+        💬 Commentaires ({{ comments.count }})
+      </h4>
 
-  <div class="d-flex align-items-center gap-2 mb-2 text-muted small">
-    <span>Par</span>
-    <a href="{% url 'author_profile' article.author.username %}" class="fw-semibold text-decoration-none">
-      {{ article.author.username }}
-    </a>
-    <span>·</span>
-    <span>{{ article.created_at|date:"d F Y" }}</span>
-    <span>·</span>
-    <span>{{ article.views }} vue{{ article.views|pluralize }}</span>
-  </div>
+      {% for comment in comments %}
+      <div class="mb-3 p-3 border rounded">
+        <strong>{{ comment.name }}</strong>
+        <small class="text-muted ms-2">
+          {{ comment.created_at|date:"d F Y à H:i" }}
+        </small>
+        <p class="mt-2 mb-0">{{ comment.content }}</p>
+      </div>
+      {% empty %}
+      <p class="text-muted">
+        Aucun commentaire. Soyez le premier. 👇
+      </p>
+      {% endfor %}
 
-  <h1 class="fw-bold mb-4">{{ article.title }}</h1>
+      <hr>
 
-  {% if article.image %}
-    <img src="{{ article.image.url }}"
-         alt="StarMediaBlog - {{ article.title }}"
-         class="img-fluid rounded mb-4"
-         style="width:100%; height:420px; object-fit:cover;"
-         loading="lazy">
-  {% endif %}
+      <h4 class="mb-4">Laisser un commentaire</h4>
+      <form method="POST" class="mb-5">
+        {% csrf_token %}
+        <div class="mb-3">{{ form.name }}</div>
+        <div class="mb-3">{{ form.email }}</div>
+        <div class="mb-3">{{ form.content }}</div>
+        <button type="submit" class="btn btn-dark fw-bold">
+          Publier le commentaire ✅
+        </button>
+      </form>
 
-  {% if article.video %}
-    <div class="mb-4">
-      <video width="100%" height="400" controls class="rounded">
-        <source src="{{ article.video.url }}" type="video/mp4">
-      </video>
+      <div class="d-flex justify-content-between mb-5">
+        {% if precedent %}
+        <a href="{% url 'article_detail' precedent.slug %}"
+           class="btn btn-outline-dark btn-sm">
+          ← {{ precedent.title|truncatechars:35 }}
+        </a>
+        {% else %}
+        <span></span>
+        {% endif %}
+        {% if suivant %}
+        <a href="{% url 'article_detail' suivant.slug %}"
+           class="btn btn-outline-dark btn-sm">
+          {{ suivant.title|truncatechars:35 }} →
+        </a>
+        {% endif %}
+      </div>
+
+      {% if similaires %}
+      <div class="mb-5">
+        <h4 class="mb-4">📖 Articles similaires</h4>
+        <div class="row">
+          {% for sim in similaires %}
+          <div class="col-md-4 mb-3">
+            <div class="card h-100">
+              <a href="{% url 'article_detail' sim.slug %}">
+                {% if sim.image %}
+                  <img src="{{ sim.image.url }}"
+                       class="card-img-top"
+                       alt="{{ sim.title }}"
+                       loading="lazy"
+                       style="height:140px;
+                              object-fit:cover;
+                              object-position:top center;">
+                {% else %}
+                  <img src="{% static 'images/logo.png' %}"
+                       class="card-img-top"
+                       style="height:140px; object-fit:cover;">
+                {% endif %}
+              </a>
+              <div class="card-body p-2">
+                <small>
+                  <a href="{% url 'article_detail' sim.slug %}"
+                     class="text-decoration-none text-dark fw-bold">
+                    {{ sim.title|truncatechars:60 }}
+                  </a>
+                </small>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
     </div>
-  {% endif %}
 
-  {% if article.youtube_id %}
-    <div class="ratio ratio-16x9 mb-4">
-      <iframe src="https://www.youtube.com/embed/{{ article.youtube_id }}"
-              frameborder="0" allowfullscreen></iframe>
+    <div class="col-lg-4">
+
+      <div class="card mb-4 text-white text-center"
+           style="background:#1a1a2e;">
+        <div class="card-body p-4">
+          <h5 class="mb-2">🔔 Notifications</h5>
+          <p class="small mb-3">
+            Reçois une alerte à chaque
+            nouvel article publié
+          </p>
+          <button id="notif-btn"
+                  onclick="demanderNotification()"
+                  class="btn btn-warning fw-bold w-100">Activer les notifications 🔔
+          </button>
+          <small id="notif-status"
+                 class="text-muted mt-2 d-block"></small>
+        </div>
+      </div>
+
+      <div class="card mb-4 text-white"
+           style="background:#0d1117;">
+        <div class="card-body p-4">
+          <h5 class="mb-2 text-center">📧 Newsletter</h5>
+          <p class="small text-center mb-3">
+            Reçois nos articles
+            directement par email
+          </p>
+          <form method="POST"
+                action="/newsletter/subscribe/"
+                id="newsletter-form">
+            {% csrf_token %}
+            <input type="email"
+                   name="email"
+                   class="form-control mb-2"
+                   placeholder="Ton adresse email"
+                   required>
+            <input type="text"
+                   name="name"
+                   class="form-control mb-2"
+                   placeholder="Ton prénom (optionnel)">
+            <button type="submit"
+                    class="btn btn-warning fw-bold w-100">
+              S'abonner gratuitement ✅
+            </button>
+          </form>
+          <div id="newsletter-msg"
+               class="text-center mt-2 small"></div>
+        </div>
+      </div>
+
+      {% if similaires %}
+      <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+          <h5 class="mb-0">⭐️ À la une</h5>
+        </div>
+        <div class="card-body p-2">
+          {% for sim in similaires %}
+          <div class="d-flex align-items-start mb-2">
+            {% if sim.image %}
+              <img src="{{ sim.image.url }}"
+                   loading="lazy"
+                   style="width:65px; height:50px;
+                          object-fit:cover;
+                          object-position:top center;
+                          border-radius:4px;
+                          flex-shrink:0;">
+            {% endif %}
+            <div class="ms-2">
+              <a href="{% url 'article_detail' sim.slug %}"
+                 class="text-decoration-none text-dark">
+                <small>
+                  <strong>{{ sim.title|truncatechars:50 }}</strong>
+                </small>
+              </a>
+              <br>
+              <small class="text-muted">
+                👁 {{ sim.views }} vues
+              </small>
+            </div>
+          </div>
+          {% if not forloop.last %}<hr class="my-1">{% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+          <h5 class="mb-0">🔗 Partager</h5>
+        </div>
+        <div class="card-body">
+          <div class="d-grid gap-2">
+            <a href="https://wa.me/?text={{ article.title|urlencode }}%20https://starmediablog.onrender.com/article/{{ article.slug }}/"
+               target="_blank"
+               class="btn btn-sm fw-bold text-white"
+               style="background:#25D366;">
+              📱 WhatsApp
+            </a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://starmediablog.onrender.com/article/{{ article.slug }}/"
+               target="_blank"
+               class="btn btn-sm fw-bold text-white"
+               style="background:#1877F2;">
+              📘 Facebook
+            </a>
+            <a href="https://t.me/share/url?url=https://starmediablog.onrender.com/article/{{ article.slug }}/"
+               target="_blank"
+               class="btn btn-sm fw-bold text-white"
+               style="background:#0088cc;">
+              ✈️ Telegram
+            </a>
+          </div>
+        </div>
+      </div>
+
     </div>
-  {% endif %}
 
-  <!-- ✅ DIV propre — jamais de <p> autour du contenu CKEditor -->
-  <div class="article-body mb-5">
-    {{ article.content|safe }}
   </div>
-
-    <!-- ══ SIGNATURE BLOG ══ -->
-  <div class="article-signature">
-    <span class="signature-logo">StarMediaBlog</span>
-    <span class="signature-tagline">
-      L'actualité sans filtre — La vérité sans compromis
-    </span>
-  </div>
-
-  <div class="mb-5">
-    {% if user.is_authenticated %}
-      <button id="like-btn" data-slug="{{ article.slug }}" class="btn btn-outline-danger">
-        ❤️ <span id="like-count">{{ article.likes.count }}</span> J'aime
-      </button>
-    {% else %}
-      <a href="/accounts/login/" class="btn btn-outline-secondary">
-        Connectez-vous pour liker
-      </a>
-    {% endif %}
-  </div>
-
-  <hr>
-  <h4 class="mb-4">Commentaires</h4>
-
-  {% for comment in comments %}
-  <div class="mb-3 p-3 border rounded">
-    <strong>{{ comment.name }}</strong>
-    <small class="text-muted ms-2">{{ comment.created_at|date:"d F Y à H:i" }}</small>
-    <p class="mt-2 mb-0">{{ comment.content }}</p>
-  </div>
-  {% empty %}
-  <p class="text-muted">Aucun commentaire. Soyez le premier.</p>
-  {% endfor %}
-
-  <hr>
-  <h4 class="mb-4">Laisser un commentaire</h4>
-
-  <form method="POST" class="mb-5">
-    {% csrf_token %}
-    <div class="mb-3">{{ form.name }}</div>
-    <div class="mb-3">{{ form.email }}</div>
-    <div class="mb-3">{{ form.content }}</div>
-    <button type="submit" class="btn btn-primary">Publier le commentaire</button>
-  </form>
-
 </div>
 {% endblock %}
 
@@ -119,7 +243,121 @@
       })
       .then(r => r.json())
       .then(data => {
-        document.getElementById("like-count").innerText = data.likes;
+        document.WhatsApp.com (https://wa.me/?text=%7B%7B)
+    {% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ article.title }} — StarMediaBlog{% endblock %}
+{% block meta_description %}{{ article.title }} — StarMediaBlog{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ article.title }}{% endblock %}
+{% block og_description %}{{ article.title }} — StarMediaBlog{% endblock %}
+{% block og_image %}
+  {% if article.image %}{{ article.image.url }}{% else %}{% static 'images/logo.png' %}{% endif %}
+{% endblock %}
+{% block twitter_title %}{{ article.title }}{% endblock %}
+{% block twitter_image %}
+  {% if article.image %}{{ article.image.url }}{% else %}{% static 'images/logo.png' %}{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="row">
+
+    <div class="col-lg-8">
+
+      <div class="d-flex flex-wrap align-items-center gap-2 mb-2 text-muted small">
+        <span>Par</span>
+        <a href="{% url 'author_profile' article.author.username %}"
+           class="fw-semibold text-decoration-none text-dark">
+          {{ article.author.username }}
+        </a>
+        <span>·</span>
+        <span>{{ article.created_at|date:"d F Y" }}</span>
+        <span>·</span>
+        <span>👁 {{ article.views }} vue{{ article.views|pluralize }}</span>
+        {% if temps_lecture %}
+        <span>·</span>
+        <span>⏱️ {{ temps_lecture }} min de lecture</span>
+        {% endif %}
+        {% if article.category %}
+        <span>·</span>
+        <a href="{% url 'category_articles' article.category.slug %}"
+           class="badge bg-dark text-decoration-none">
+          {{ article.category.name }}
+        </a>
+        {% endif %}
+      </div>
+
+      <h1 class="fw-bold mb-4">{{ article.title }}</h1>
+
+      {% if article.image %}
+        <img src="{{ article.image.url }}"
+             alt="StarMediaBlog - {{ article.title }}"
+             class="img-fluid rounded mb-4"
+             style="width:100%;
+                    height:420px;
+                    object-fit:cover;
+                    object-position:top center;"
+             loading="lazy">
+      {% endif %}
+
+      {% if article.video %}
+        <div class="mb-4">
+          <video width="100%" height="400" controls class="rounded">
+            <source src="{{ article.video.url }}" type="video/mp4">
+          </video>
+        </div>
+      {% endif %}
+
+      {% if article.youtube_id %}
+        <div class="ratio ratio-16x9 mb-4">
+          <iframe src="https://www.youtube.com/embed/{{ article.youtube_id }}"
+                  frameborder="0" allowfullscreen></iframe>
+        </div>
+      {% endif %}
+
+      <div class="article-body mb-4">
+        {{ article.content|safe }}
+      </div>
+
+      <div class="article-signature mb-4">
+        <span class="signature-logo">StarMediaBlog</span>
+        <span class="signature-tagline">
+          L'actualité sans filtre — La vérité sans compromis
+        </span>
+      </div>
+
+      <div class="share-box mb-4 p-3 rounded"
+           style="background:#f8f9fa; border:1px solid #e0e0e0;">
+        <p class="fw-bold mb-2 text-dark">🔗 Partager cet article :</p>
+        <div class="d-flex flex-wrap gap-2">
+
+          <a href="https://wa.me/?text={{ article.title|urlencode }}%20-%20https://starmediablog.onrender.com/article/{{ article.slug }}/"
+             target="_blank"
+             class="btn btn-sm fw-bold text-white"
+             style="background:#25D366;">
+            📱 WhatsApp
+          </a>
+
+          <a href="https://www.facebook.com/sharer/sharer.php?u=https://starmediablog.onrender.com/article/{{ article.slug }}/"
+             target="_blank"
+             class="btn btn-sm fw-bold text-white"
+             style="background:#1877F2;">
+            📘 Facebook
+          </a>
+
+          <a href="https://twitter.com/intent/tweet?text={{ article.title|urlencode }}&url=https://starmediablog.onrender.com/article/{{ article.slug }}/"
+             target="_blank"
+             class="btn btn-sm fw-bold text-white"
+             style="background:#000000;">
+            🐦 Twitter / X
+          </a>
+
+          <a href="https://t.
+
+Youtube (https://www.youtube.com/embed/)
+    getElementById("like-count").innerText = data.likes;
         likeBtn.classList.toggle("btn-danger", data.liked);
         likeBtn.classList.toggle("btn-outline-danger", !data.liked);
       })
@@ -128,4 +366,67 @@
   }
 </script>
 {% endif %}
+
+<script>
+  const newsletterForm = document.getElementById("newsletter-form");
+  if (newsletterForm) {
+    newsletterForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const msg = document.getElementById("newsletter-msg");
+      fetch("/newsletter/subscribe/", {
+        method: "POST",
+        body: formData,
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          msg.innerHTML = "<span class='text-success'>✅ " + data.message + "</span>";
+          newsletterForm.reset();
+        } else {
+          msg.innerHTML = "<span class='text-warning'>⚠️ " + data.message + "</span>";
+        }
+      })
+      .catch(() => {
+        msg.innerHTML = "<span class='text-danger'>❌ Erreur. Réessaie.</span>";
+      });
+    });
+  }
+</script>
+
+<script>
+  function demanderNotification() {
+    const btn = document.getElementById("notif-btn");
+    const status = document.getElementById("notif-status");
+    if (!("Notification" in window)) {
+      status.textContent = "❌ Non supporté";
+      return;
+    }
+    if (Notification.permission === "granted") {
+      status.textContent = "✅ Déjà activées !";
+      return;
+    }
+    Notification.requestPermission().then(function(permission) {
+      if (permission === "granted") {
+        status.textContent = "✅ Activées !";
+        btn.textContent = "✅ Activées";
+        btn.classList.replace("btn-warning", "btn-success");
+        new Notification("StarMediaBlog 🔥", {
+          body: "Tu recevras nos prochains articles !",
+          icon: "{% static 'images/logo.png' %}"
+        });
+      } else {
+        status.textContent = "❌ Permission refusée";
+      }
+    });
+  }
+  window.addEventListener("load", function() {
+    const btn = document.getElementById("notif-btn");
+    if (btn && Notification.permission === "granted") {
+      btn.textContent = "✅ Activées";
+      btn.classList.replace("btn-warning", "btn-success");
+    }
+  });
+</script>
 {% endblock %}

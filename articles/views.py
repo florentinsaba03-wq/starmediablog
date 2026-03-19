@@ -1,85 +1,122 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Article, Category, Comment
-from .forms import CommentForm
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Article, Category, Comment, Like, Guide
+from .forms import CommentForm, SubscriberForm
 from django.core.paginator import Paginator
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
-from .models import Like
 from django.contrib.auth.models import User
-from django.http import FileResponse
-from .models import Guide
-from .forms import SubscriberForm
 from django.db.models import F
 from django.db import IntegrityError
-from django.http import HttpResponse
-
-
-
 
 
 def home(request):
 
-    # HERO ARTICLE (dernier article sport par exemple)
     hero = Article.objects.filter(
-        status='published',
-        category__slug='sport'
+        status='published'
     ).order_by('-created_at').first()
 
-    # ARTICLES SECONDAIRES
     secondary = Article.objects.filter(
-        status='published',
-        category__slug='sport'
-    ).order_by('-created_at')[1:5]
+        status='published'
+    ).exclude(
+        pk=hero.pk if hero else None
+    ).order_by('-created_at')[:4]
 
-    # TRENDING ARTICLES
-    trending = Article.objects.filter(
-        status='published',
-        category__slug__in=['sport', 'musique', 'sociopolitique', 'divers']
-    ).order_by('-views')[:5]
+    already_shown = list(
+        secondary.values_list('pk', flat=True)
+    )
+    if hero:
+        already_shown.append(hero.pk)
 
-    # ARTICLES PAR CATÉGORIE
     sport_articles = Article.objects.filter(
         status='published',
         category__slug='sport'
-    ).order_by('-created_at')[:5]
+    ).exclude(pk__in=already_shown).order_by('-created_at')[:4]
 
     musique_articles = Article.objects.filter(
         status='published',
         category__slug='musique'
-    ).order_by('-created_at')[:5]
+    ).exclude(pk__in=already_shown).order_by('-created_at')[:4]
 
     sociopolitique_articles = Article.objects.filter(
         status='published',
         category__slug='sociopolitique'
-    ).order_by('-created_at')[:5]
+    ).exclude(pk__in=already_shown).order_by('-created_at')[:4]
 
     divers_articles = Article.objects.filter(
         status='published',
         category__slug='divers'
-    ).order_by('-created_at')[:5]
+    ).exclude(pk__in=already_shown).order_by('-created_at')[:4]
+
+    all_section_ids = already_shown + list(
+        sport_articles.values_list('pk', flat=True)
+    ) + list(
+        musique_articles.values_list('pk', flat=True)
+    ) + list(
+        sociopolitique_articles.values_list('pk', flat=True)
+    ) + list(
+        divers_articles.values_list('pk', flat=True)
+    )
+
+    a_la_une = Article.objects.filter(
+        status='published'
+    ).exclude(
+        pk__in=all_section_ids
+    ).order_by('-views')[:5]
+
+    if a_la_une.count() < 3:
+        a_la_une = Article.objects.filter(
+            status='published'
+        ).order_by('-views')[:5]
+
+    categories = Category.objects.all()
 
     context = {
         'hero': hero,
         'secondary': secondary,
-        'trending': trending,
+        'a_la_une': a_la_une,
         'sport_articles': sport_articles,
         'musique_articles': musique_articles,
         'sociopolitique_articles': sociopolitique_articles,
         'divers_articles': divers_articles,
+        'categories': categories,
     }
 
     return render(request, 'home.html', context)
 
 
-
 def article_detail(request, slug):
 
-    article = get_object_or_404(Article, slug=slug,status='published')
+    article = get_object_or_404(
+        Article, slug=slug, status='published'
+    )
 
-    article.views += 1
-    article.save()
-    comments = article.comments.filter(active=True).order_by('-created_at')
+    Article.objects.filter(pk=article.pk).update(
+        views=F('views') + 1
+    )
+    article.refresh_from_db()
+
+    similaires = Article.objects.filter(
+        status='published',
+        category=article.category
+    ).exclude(pk=article.pk).order_by('-created_at')[:3]
+
+    suivant = Article.objects.filter(
+        created_at__gt=article.created_at,
+        status='published'
+    ).order_by('created_at').first()
+
+    precedent = Article.objects.filter(
+        created_at__lt=article.created_at,
+        status='published'
+    ).order_by('-created_at').first()
+
+    mots = len(article.content.split())
+    temps_lecture = max(1, mots // 200)
+
+    comments = article.comments.filter(
+        active=True
+    ).order_by('-created_at')
+
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -89,12 +126,21 @@ def article_detail(request, slug):
             form = CommentForm()
     else:
         form = CommentForm()
-    context = {'article': article, 'comments': comments, 'form': form}
+
+    context = {
+        'article': article,
+        'comments': comments,
+        'form': form,
+        'similaires': similaires,
+        'suivant': suivant,
+        'precedent': precedent,
+        'temps_lecture': temps_lecture,
+    }
+
     return render(request, 'article_detail.html', context)
 
 
 def category_articles(request, slug):
-
     category = get_object_or_404(Category, slug=slug)
 
     articles_list = Article.objects.filter(
@@ -103,9 +149,7 @@ def category_articles(request, slug):
     ).order_by('-created_at')
 
     paginator = Paginator(articles_list, 6)
-
     page_number = request.GET.get('page')
-
     articles = paginator.get_page(page_number)
 
     context = {
@@ -116,11 +160,47 @@ def category_articles(request, slug):
     return render(request, 'category_articles.html', context)
 
 
-from django.http import JsonResponse
+def newsletter_subscribe(request):
+    if request.method == "POST":
+        email = request.POST.get("email", "").strip()
+        name = request.POST.get("name", "").strip()
+
+        if not email:
+            return JsonResponse({
+                "success": False,
+                "message": "Email obligatoire."
+            })
+
+        try:
+            from .models import Subscriber
+            subscriber, created = Subscriber.objects.get_or_create(
+                email=email,
+                defaults={"name": name}
+            )
+            if created:
+                return JsonResponse({
+                    "success": True,
+                    "message": "Abonnement réussi ! Bienvenue 🎉"
+                })
+            else:
+                return JsonResponse({
+                    "success": False,
+                    "message": "Cet email est déjà inscrit. ✅"
+                })
+        except Exception:
+            return JsonResponse({
+                "success": False,
+                "message": "Erreur lors de l'inscription."
+            })
+
+    return JsonResponse({
+        "success": False,
+        "message": "Méthode non autorisée."
+    })
+
 
 @login_required
 def like_article(request, slug):
-
     article = get_object_or_404(Article, slug=slug)
 
     like, created = Like.objects.get_or_create(
@@ -139,8 +219,8 @@ def like_article(request, slug):
         'liked': liked
     })
 
-def author_profile(request, username):
 
+def author_profile(request, username):
     author = get_object_or_404(User, username=username)
 
     articles = Article.objects.filter(
@@ -153,9 +233,9 @@ def author_profile(request, username):
         "articles": articles
     })
 
+
 @login_required
 def dashboard(request):
-
     articles = Article.objects.filter(
         author=request.user
     )
@@ -163,6 +243,7 @@ def dashboard(request):
     return render(request, "dashboard.html", {
         "articles": articles
     })
+
 
 def capture_email(request, slug):
     guide = get_object_or_404(Guide, slug=slug)
@@ -176,7 +257,6 @@ def capture_email(request, slug):
                 subscriber.guide = guide
                 subscriber.save()
             except IntegrityError:
-                # L'email existe déjà pour ce guide
                 pass
 
             request.session[f'guide_access_{guide.id}'] = True
@@ -193,20 +273,20 @@ def capture_email(request, slug):
 def download_guide(request, slug):
     guide = get_object_or_404(Guide, slug=slug)
 
-    # 🔒 Vérifie si l'utilisateur a accès après capture email
     if not request.session.get(f'guide_access_{guide.id}'):
         return redirect('capture', slug=guide.slug)
 
-    # 📊 Incrémentation atomique du compteur
     Guide.objects.filter(id=guide.id).update(
         downloads_count=F('downloads_count') + 1
     )
 
-    # 📥 Téléchargement sécurisé du fichier
     return FileResponse(
         guide.pdf.open('rb'),
         as_attachment=True
     )
 
+
 def google_verification(request):
-    return HttpResponse("google-site-verification: google5800450418fec533.html")
+    return HttpResponse(
+        "google-site-verification: google5800450418fec533.html"
+    )

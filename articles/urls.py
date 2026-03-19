@@ -19,5 +19,8 @@ urlpatterns = [
         "google5800450418fec533.html",
         google_verification, name='google_verification'
     ),
+    path('newsletter/subscribe/',
+     views.newsletter_subscribe,
+     name='newsletter_subscribe'),
 
 ]

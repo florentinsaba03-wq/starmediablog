@@ -13,13 +13,16 @@
 {% block content %}
 <div class="container mt-4">
 
-  <!-- ══ HERO ARTICLE ══ -->
   {% if hero %}
   <div class="row mb-5">
     <div class="col-12">
-      <a href="{% url 'article_detail' hero.slug %}">
+      <a href="{% url 'article_detail' hero.slug %}" class="text-decoration-none text-dark">
         {% if hero.image %}
-          <img src="{{ hero.image.url }}" class="hero-img w-100" alt="{{ hero.title }}" loading="lazy">
+          <img src="{{ hero.image.url }}"
+               class="hero-img w-100"
+               alt="{{ hero.title }}"
+               loading="lazy"
+               style="object-fit:cover; object-position:top center;">
         {% else %}
           <img src="{% static 'images/logo.png' %}" class="hero-img w-100" loading="lazy">
         {% endif %}
@@ -29,21 +32,30 @@
   </div>
   {% endif %}
 
-  <!-- ══ ARTICLES SECONDAIRES ══ -->
   <div class="row mb-5">
     {% for article in secondary %}
     <div class="col-md-3 col-sm-6 mb-4">
       <div class="card h-100">
         <a href="{% url 'article_detail' article.slug %}">
           {% if article.image %}
-            <img src="{{ article.image.url }}" class="card-img-top" alt="{{ article.title }}" loading="lazy">
+            <img src="{{ article.image.url }}"
+                 class="card-img-top"
+                 alt="{{ article.title }}"
+                 loading="lazy"
+                 style="object-fit:cover;
+                        object-position:top center;
+                        height:180px;">
           {% else %}
-            <img src="{% static 'images/logo.png' %}" class="card-img-top" loading="lazy">
+            <img src="{% static 'images/logo.png' %}"
+                 class="card-img-top"
+                 loading="lazy"
+                 style="height:180px; object-fit:cover;">
           {% endif %}
         </a>
         <div class="card-body">
           <h6>
-            <a href="{% url 'article_detail' article.slug %}" class="text-decoration-none text-dark">
+            <a href="{% url 'article_detail' article.slug %}"
+               class="text-decoration-none text-dark">
               {{ article.title }}
             </a>
           </h6>
@@ -55,18 +67,21 @@
 
   <div class="row">
 
-    <!-- ══ MAIN CONTENT ══ -->
     <div class="col-md-8">
 
-      {% for section in sections_data %}
+      {% if sport_articles %}
       <div class="articles-container mb-5">
-        <h2 class="mb-4">{{ section.label }}</h2>
+        <h2 class="mb-4">⚽️ Sport</h2>
         <div class="articles-grid">
-          {% for article in section.articles %}
+          {% for article in sport_articles %}
           <div class="article-card">
             <a href="{% url 'article_detail' article.slug %}">
               {% if article.image %}
-                <img src="{{ article.image.url }}" alt="{{ article.title }}" loading="lazy">
+                <img src="{{ article.image.url }}"
+                     alt="{{ article.title }}"
+                     loading="lazy"
+                     style="object-fit:cover;
+                            object-position:top center;">
               {% else %}
                 <img src="{% static 'images/logo.png' %}" loading="lazy">
               {% endif %}
@@ -76,89 +91,173 @@
           {% endfor %}
         </div>
       </div>
-      {% empty %}
+      {% endif %}
 
-      <!-- Fallback si sections_data pas encore dispo dans la vue -->
+      {% if musique_articles %}
       <div class="articles-container mb-5">
-        <h2 class="mb-4">Sport</h2>
-        <div class="articles-grid">
-          {% for article in sport_articles %}
-          <div class="article-card">
-            <a href="{% url 'article_detail' article.slug %}">
-              {% if article.image %}<img src="{{ article.image.url }}" loading="lazy">
-              {% else %}<img src="{% static 'images/logo.png' %}" loading="lazy">{% endif %}
-              <h3>{{ article.title }}</h3>
-            </a>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-
-      <div class="articles-container mb-5">
-        <h2 class="mb-4">Musique</h2>
+        <h2 class="mb-4">🎵 Musique</h2>
         <div class="articles-grid">
           {% for article in musique_articles %}
           <div class="article-card">
             <a href="{% url 'article_detail' article.slug %}">
-              {% if article.image %}<img src="{{ article.image.url }}" loading="lazy">
-              {% else %}<img src="{% static 'images/logo.png' %}" loading="lazy">{% endif %}
+              {% if article.image %}
+                <img src="{{ article.image.url }}"
+                     alt="{{ article.title }}"
+                     loading="lazy"
+                     style="object-fit:cover;
+                            object-position:top center;">
+              {% else %}
+                <img src="{% static 'images/logo.png' %}" loading="lazy">
+              {% endif %}
               <h3>{{ article.title }}</h3>
             </a>
           </div>
           {% endfor %}
         </div>
       </div>
+      {% endif %}
 
+      {% if sociopolitique_articles %}
       <div class="articles-container mb-5">
-        <h2 class="mb-4">Sociopolitique</h2>
+          <h2 class="mb-4">🌍 Sociopolitique</h2>
         <div class="articles-grid">
           {% for article in sociopolitique_articles %}
-<div class="article-card">
+          <div class="article-card">
             <a href="{% url 'article_detail' article.slug %}">
-              {% if article.image %}<img src="{{ article.image.url }}" loading="lazy">
-              {% else %}<img src="{% static 'images/logo.png' %}" loading="lazy">{% endif %}
+              {% if article.image %}
+                <img src="{{ article.image.url }}"
+                     alt="{{ article.title }}"
+                     loading="lazy"
+                     style="object-fit:cover;
+                            object-position:top center;">
+              {% else %}
+                <img src="{% static 'images/logo.png' %}" loading="lazy">
+              {% endif %}
               <h3>{{ article.title }}</h3>
             </a>
           </div>
           {% endfor %}
         </div>
       </div>
+      {% endif %}
 
+      {% if divers_articles %}
       <div class="articles-container mb-5">
-        <h2 class="mb-4">Divers</h2>
+        <h2 class="mb-4">💡 Divers</h2>
         <div class="articles-grid">
           {% for article in divers_articles %}
           <div class="article-card">
             <a href="{% url 'article_detail' article.slug %}">
-              {% if article.image %}<img src="{{ article.image.url }}" loading="lazy">
-              {% else %}<img src="{% static 'images/logo.png' %}" loading="lazy">{% endif %}
+              {% if article.image %}
+                <img src="{{ article.image.url }}"
+                     alt="{{ article.title }}"
+                     loading="lazy"
+                     style="object-fit:cover;
+                            object-position:top center;">
+              {% else %}
+                <img src="{% static 'images/logo.png' %}" loading="lazy">
+              {% endif %}
               <h3>{{ article.title }}</h3>
             </a>
           </div>
           {% endfor %}
         </div>
       </div>
-
-      {% endfor %}
+      {% endif %}
 
     </div>
 
-    <!-- ══ SIDEBAR TENDANCES ══ -->
     <div class="col-md-4">
-      <h4 class="mb-4">🔥 Tendances</h4>
-      {% for article in trending %}
+
       <div class="mb-4">
-        <a href="{% url 'article_detail' article.slug %}" class="text-decoration-none text-dark">
-          {% if article.image %}
-            <img src="{{ article.image.url }}" class="img-fluid mb-2 rounded" alt="{{ article.title }}" loading="lazy">
-          {% else %}
-            <img src="{% static 'images/logo.png' %}" class="img-fluid mb-2" loading="lazy">
-          {% endif %}
-          <h6>{{ article.title }}</h6>
-        </a>
-        <small class="text-muted">{{ article.views }} vues</small>
+        <form action="/recherche/" method="GET">
+          <div class="input-group">
+            <input type="text"
+                   name="q"
+                   class="form-control"
+                   placeholder="🔍 Rechercher un article...">
+            <button class="btn btn-dark" type="submit">OK</button>
+          </div>
+        </form>
       </div>
-      {% endfor %}
+
+      <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+          <h5 class="mb-0">⭐️ À la une</h5>
+        </div>
+        <div class="card-body p-2">
+          {% for article in a_la_une %}
+          <div class="d-flex align-items-start mb-3">
+            <a href="{% url 'article_detail' article.slug %}"
+               class="flex-shrink-0">
+              {% if article.image %}
+                <img src="{{ article.image.url }}"
+                     alt="{{ article.title }}"
+                     loading="lazy"
+                     style="width:80px;
+                            height:60px;
+                            object-fit:cover;
+                            object-position:top center;
+                            border-radius:4px;">
+              {% else %}
+                <img src="{% static 'images/logo.png' %}"
+                     style="width:80px; height:60px;
+                            object-fit:cover;
+                            border-radius:4px;">
+              {% endif %}
+            </a>
+            <div class="ms-2">
+              <a href="{% url 'article_detail' article.slug %}"
+                 class="text-decoration-none text-dark">
+                <small>
+                  <strong>{{ article.title|truncatechars:55 }}</strong>
+                </small>
+              </a>
+              <br>
+              <small class="text-muted">👁 {{ article.views }} vues</small>
+            </div>
+          </div>
+          {% if not forloop.last %}<hr class="my-1">{% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+          <h5 class="mb-0">📂 Catégories</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+          {% for category in categories %}
+          <li class="list-group-item d-flex
+                      justify-content-between align-items-center">
+            <a href="{% url 'category_articles' category.slug %}" class="text-decoration-none text-dark">
+              {{ category.name }}
+            </a>
+            <span class="badge bg-dark rounded-pill">
+              {{ category.article_set.count }}
+            </span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="card mb-4 text-white"
+           style="background:#1a1a2e;">
+        <div class="card-body text-center p-4">
+          <h5 class="mb-2">📧 Newsletter</h5>
+          <p class="small mb-3">
+            Reçois nos articles directement
+            dans ta boîte mail
+          </p>
+          <input type="email"
+                 class="form-control mb-2"
+                 placeholder="Ton adresse email">
+          <button class="btn btn-warning w-100 fw-bold">
+            S'abonner gratuitement ✅
+          </button>
+        </div>
+      </div>
+
     </div>
 
   </div>
