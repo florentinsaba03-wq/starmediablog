@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Article, Category, Comment
 from .models import Like
-from .models import Guide, Subscriber
+from .models import Guide, Subscriber, NewsletterSubscriber
 
 admin.site.register(Article)
 admin.site.register(Category)
